@@ -1,1 +1,297 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RA Coin</title>
 
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+    margin:0;
+    background:#090b12;
+    color:#fff;
+    font-family:Arial,sans-serif;
+}
+
+.app{
+    max-width:480px;
+    margin:auto;
+    min-height:100vh;
+    padding:20px 16px 90px;
+}
+
+.header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.logo{
+    font-size:25px;
+    font-weight:bold;
+}
+
+.status{
+    background:#151923;
+    padding:8px 12px;
+    border-radius:20px;
+    font-size:12px;
+}
+
+.card{
+    background:#121620;
+    border:1px solid #202633;
+    border-radius:22px;
+    padding:20px;
+    margin-top:18px;
+}
+
+.center{text-align:center}
+
+.balance{
+    font-size:38px;
+    font-weight:bold;
+    margin:10px 0;
+}
+
+.symbol{
+    color:#8e96a8;
+    font-size:14px;
+}
+
+.mining{
+    margin:25px auto;
+    width:210px;
+    height:210px;
+    border-radius:50%;
+    border:8px solid #252c3b;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    box-shadow:0 0 35px rgba(80,130,255,.12);
+}
+
+.mining .coin{
+    font-size:42px;
+}
+
+.speed{
+    color:#8e96a8;
+    margin-top:5px;
+}
+
+.claim{
+    width:100%;
+    border:0;
+    border-radius:15px;
+    padding:16px;
+    background:#fff;
+    color:#080a0f;
+    font-size:17px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+    margin-top:18px;
+}
+
+.box{
+    background:#171c27;
+    border-radius:16px;
+    padding:16px;
+}
+
+.box small{
+    color:#8e96a8;
+}
+
+.box strong{
+    display:block;
+    margin-top:8px;
+    font-size:18px;
+}
+
+.nav{
+    position:fixed;
+    bottom:0;
+    left:0;
+    right:0;
+    max-width:480px;
+    margin:auto;
+    background:#11151e;
+    border-top:1px solid #252b38;
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    padding:10px 5px;
+}
+
+.nav button{
+    background:none;
+    border:0;
+    color:#7f8798;
+    font-size:11px;
+}
+
+.nav button.active{
+    color:#fff;
+}
+
+.nav span{
+    display:block;
+    font-size:20px;
+    margin-bottom:3px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+    <div class="header">
+        <div class="logo">🪙 RA Coin</div>
+        <div class="status">● Mining</div>
+    </div>
+
+    <div class="card center">
+
+        <div class="symbol">RA COIN BAKİYESİ</div>
+
+        <div class="balance" id="balance">0.0000</div>
+
+        <div class="symbol">RA</div>
+
+        <div class="mining">
+            <div class="coin">🪙</div>
+            <strong id="counter">0.0000</strong>
+            <div class="speed">Mining aktif</div>
+        </div>
+
+        <button class="claim" onclick="claim()">
+            CLAIM
+        </button>
+
+    </div>
+
+    <div class="grid">
+
+        <div class="box">
+            <small>Mining Hızı</small>
+            <strong id="speed">0 RA / saat</strong>
+        </div>
+
+        <div class="box">
+            <small>Toplam Kazılan</small>
+            <strong id="total">0.0000 RA</strong>
+        </div>
+
+        <div class="box">
+            <small>Aktif Paket</small>
+            <strong id="package">Yok</strong>
+        </div>
+
+        <div class="box">
+            <small>Referans</small>
+            <strong>0 kişi</strong>
+        </div>
+
+    </div>
+
+</div>
+
+<div class="nav">
+    <button class="active">
+        <span>⛏️</span>
+        Mining
+    </button>
+
+    <button>
+        <span>💰</span>
+        Assets
+    </button>
+
+    <button>
+        <span>🎁</span>
+        Tasks
+    </button>
+
+    <button>
+        <span>👥</span>
+        Friends
+    </button>
+
+    <button>
+        <span>👤</span>
+        Profile
+    </button>
+</div>
+
+<script>
+
+let balance = 0;
+let total = 0;
+
+/*
+  SANAL/DEMO MADENCİLİK EKONOMİSİ
+
+  Yatırımsız başlangıç hızı:
+  Günlük yaklaşık 0.30$ karşılığı sanal RA.
+
+  1 RA = 0.002$ referans değeri
+  0.30 / 0.002 = 150 RA / gün
+*/
+const miningPerSecond = 150 / 86400;
+
+function mine(){
+
+    balance += miningPerSecond;
+    total += miningPerSecond;
+
+    document.getElementById("counter").innerText =
+        balance.toFixed(4);
+
+    document.getElementById("balance").innerText =
+        balance.toFixed(4);
+
+    document.getElementById("total").innerText =
+        total.toFixed(4) + " RA";
+}
+
+function claim(){
+
+    if(balance <= 0){
+        alert("Claim edilecek RA bulunmuyor.");
+        return;
+    }
+
+    alert(balance.toFixed(4) + " RA claim edildi.");
+
+    balance = 0;
+
+    document.getElementById("counter").innerText =
+        "0.0000";
+
+    document.getElementById("balance").innerText =
+        "0.0000";
+}
+
+setInterval(mine,1000);
+
+if(window.Telegram && Telegram.WebApp){
+    Telegram.WebApp.ready();
+    Telegram.WebApp.expand();
+}
+
+</script>
+
+</body>
+          </html>
