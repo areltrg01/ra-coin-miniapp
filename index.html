@@ -366,11 +366,12 @@ window.showPage=function(page){
  const nav=document.getElementById('nav'+page.charAt(0).toUpperCase()+page.slice(1));
  if(nav)nav.classList.add('active');
  updateScreen();
-};
+ 
+  window.scrollTo(0,0);
+  setTimeout(function(){window.scrollTo(0,0)},50);};
  
 function updateScreen(){
  const b=fmt(data.balance), t=fmt(data.totalClaimed);
- const counter=document.getElementById('counter'); if(counter)counter.innerText=b;
  const ids={
   balance:b,counter:b,totalEarned:t,assetBalance:b,assetCoin:b,assetTotalEarned:t,
   profileBalance:b,profileTotal:t,activePackage:data.packageName,
@@ -434,4 +435,4 @@ window.task=function(name,reward){
  const now=Date.now();
  if(name==='Günlük giriş'){
   const today=new Date().toDateString();
-  if(data.lastDailyTask===today){alert('Bugünkü öd
+  if(data.lastDailyTask===today){alert('Bugünkü ödülü zat
