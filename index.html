@@ -13,7 +13,44 @@ button{font-family:Arial,sans-serif;cursor:pointer}
 .header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}.logo{font-size:25px;font-weight:bold}.status{background:#151923;color:#65e38a;padding:8px 12px;border-radius:20px;font-size:12px}
 .page{display:none}.page.active{display:block}.pageTitle{font-size:28px;font-weight:bold;margin:8px 0 18px}
 .card{background:#121620;border:1px solid #202633;border-radius:24px;padding:20px;margin-top:15px}.center{text-align:center}.symbol{color:#929aaa;font-size:15px}.balance{font-size:42px;font-weight:bold;margin:9px 0}
-.mining{width:215px;height:215px;margin:28px auto;border-radius:50%;border:8px solid #252c3b;display:flex;flex-direction:column;justify-content:center;align-items:center;box-shadow:0 0 35px rgba(80,130,255,.12)}
+.mining{
+width:215px;height:215px;margin:28px auto;border-radius:50%;
+border:8px solid #252c3b;display:flex;flex-direction:column;
+justify-content:center;align-items:center;position:relative;overflow:hidden;
+isolation:isolate;background:#0f131c;
+box-shadow:0 0 35px rgba(80,130,255,.12)
+}
+.mining::before{
+content:"";position:absolute;inset:-45%;
+background:
+linear-gradient(135deg,transparent 30%,rgba(255,255,255,.055) 43%,rgba(255,255,255,.11) 47%,rgba(255,255,255,.035) 51%,transparent 64%);
+transform:translate(70%,-70%) rotate(0deg);
+animation:miningStar 8.57s linear infinite;
+pointer-events:none;z-index:0
+}
+.mining::after{
+content:"";position:absolute;inset:0;border-radius:50%;
+background:
+radial-gradient(circle at 78% 18%,rgba(255,255,255,.055) 0 1px,transparent 2px),
+radial-gradient(circle at 62% 31%,rgba(255,255,255,.035) 0 1px,transparent 2px),
+radial-gradient(circle at 35% 62%,rgba(255,255,255,.04) 0 1px,transparent 2px),
+radial-gradient(circle at 20% 78%,rgba(255,255,255,.025) 0 1px,transparent 2px);
+animation:softStars 8.57s linear infinite;
+pointer-events:none;z-index:0
+}
+.mining>*{position:relative;z-index:1}
+@keyframes miningStar{
+0%{transform:translate(72%,-72%)}
+100%{transform:translate(-72%,72%)}
+}
+@keyframes softStars{
+0%{transform:translate(10px,-10px);opacity:.45}
+50%{transform:translate(-8px,8px);opacity:.7}
+100%{transform:translate(10px,-10px);opacity:.45}
+}
+@media (prefers-reduced-motion:reduce){
+.mining::before,.mining::after{animation:none}
+}
 .coin{font-size:48px}.counter{font-size:24px;font-weight:bold;margin-top:3px}.miningText{color:#929aaa;margin-top:6px;font-size:17px}
 .claim,.action{width:100%;border:0;border-radius:15px;padding:16px;font-size:16px;font-weight:bold}.claim{background:#fff;color:#090b12}.action{background:#fff;color:#090b12;margin-top:12px}.action.dark{background:#202633;color:#fff}.action:active,.claim:active{transform:scale(.98)}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}.box{background:#171c27;border-radius:17px;padding:17px;min-height:82px}.box small{color:#929aaa;font-size:14px}.box strong{display:block;margin-top:8px;font-size:18px}
@@ -22,7 +59,7 @@ button{font-family:Arial,sans-serif;cursor:pointer}
 .profile{text-align:center}.avatar{font-size:60px}.username{font-size:22px;font-weight:bold;margin-top:8px}.notice{background:#171c27;border-radius:15px;padding:15px;color:#aeb5c4;font-size:13px;line-height:1.5;margin-top:15px}
 .nav{position:fixed;left:0;right:0;bottom:0;width:100%;max-width:480px;margin:auto;background:#11151e;border-top:1px solid #252b38;display:grid;grid-template-columns:repeat(6,1fr);padding:9px 3px;z-index:9999}.nav button{background:none;border:0;color:#7f8798;font-size:10px;padding:3px 0}.nav button.active{color:#fff}.nav span{display:block;font-size:21px;margin-bottom:3px}
 .green{color:#62d88b}.yellow{color:#ffd166}.usd-big{color:#9aa2b3;font-size:15px;margin-top:-4px}.usd-inline{color:#9aa2b3;font-size:12px;font-weight:normal;margin-left:4px}
-</style>
+.payMethods{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}.payMethod{border:1px solid #252c3b;background:#171c27;color:#fff;border-radius:16px;padding:16px;font-size:20px;font-weight:800}.payMethod span{margin-left:8px}.payMethod:active{transform:scale(.98)}.paymentAddress{word-break:break-all;background:#0d1119;border-radius:12px;padding:12px;color:#fff;font-size:13px;line-height:1.45}</style>
  </head>
  <body>
   <div class="app">
@@ -62,7 +99,7 @@ button{font-family:Arial,sans-serif;cursor:pointer}
     <div class="pageTitle">📦 Paketler</div>
     <div class="card">
      <div class="symbol">MADENCİLİK PAKETLERİ</div>
-     <div class="notice">Paketler şu anda sanal/demo sistemidir. Gerçek para ödemesi yapılmaz.</div>
+     <div class="notice">Paket seçimini yapın ve tercih ettiğiniz ödeme yöntemiyle devam edin.</div>
      <div class="package activePackage">
       <div class="packageTop">
        <div class="packageName">🟢 Başlangıç</div>
@@ -77,7 +114,7 @@ button{font-family:Arial,sans-serif;cursor:pointer}
        <div class="packagePrice">$10 Cash</div>
       </div>
       <div class="packageRate">5.000 RA / 24 saat</div>
-      <button type="button" class="action" onclick="activatePackage('RA 10',5000,5000)">AKTİFLEŞTİR</button>
+      <button type="button" class="action" onclick="openPayment('RA 10',10)">AKTİFLEŞTİR</button>
      </div>
      <div class="package">
       <div class="packageTop">
@@ -85,7 +122,7 @@ button{font-family:Arial,sans-serif;cursor:pointer}
        <div class="packagePrice">$20 Cash</div>
       </div>
       <div class="packageRate">10.000 RA / 24 saat</div>
-      <button type="button" class="action" onclick="activatePackage('RA 20',10000,10000)">AKTİFLEŞTİR</button>
+      <button type="button" class="action" onclick="openPayment('RA 20',20)">AKTİFLEŞTİR</button>
      </div>
      <div class="package">
       <div class="packageTop">
@@ -93,7 +130,7 @@ button{font-family:Arial,sans-serif;cursor:pointer}
        <div class="packagePrice">$30 Cash</div>
       </div>
       <div class="packageRate">15.000 RA / 24 saat</div>
-      <button type="button" class="action" onclick="activatePackage('RA 30',15000,15000)">AKTİFLEŞTİR</button>
+      <button type="button" class="action" onclick="openPayment('RA 30',30)">AKTİFLEŞTİR</button>
      </div>
      <div class="package">
       <div class="packageTop">
@@ -101,7 +138,7 @@ button{font-family:Arial,sans-serif;cursor:pointer}
        <div class="packagePrice">$50 Cash</div>
       </div>
       <div class="packageRate">25.000 RA / 24 saat</div>
-      <button type="button" class="action" onclick="activatePackage('RA 50',25000,25000)">AKTİFLEŞTİR</button>
+      <button type="button" class="action" onclick="openPayment('RA 50',50)">AKTİFLEŞTİR</button>
      </div>
      <div class="package">
       <div class="packageTop">
@@ -109,7 +146,7 @@ button{font-family:Arial,sans-serif;cursor:pointer}
        <div class="packagePrice">$100 Cash</div>
       </div>
       <div class="packageRate">50.000 RA / 24 saat</div>
-      <button type="button" class="action" onclick="activatePackage('RA 100',50000,50000)">AKTİFLEŞTİR</button>
+      <button type="button" class="action" onclick="openPayment('RA 100',100)">AKTİFLEŞTİR</button>
      </div>
      <div class="package">
       <div class="packageTop">
@@ -117,7 +154,7 @@ button{font-family:Arial,sans-serif;cursor:pointer}
        <div class="packagePrice">$200 Cash</div>
       </div>
       <div class="packageRate">100.000 RA / 24 saat</div>
-      <button type="button" class="action" onclick="activatePackage('RA 200',100000,100000)">AKTİFLEŞTİR</button>
+      <button type="button" class="action" onclick="openPayment('RA 200',200)">AKTİFLEŞTİR</button>
      </div>
      <div class="package">
       <div class="packageTop">
@@ -125,7 +162,7 @@ button{font-family:Arial,sans-serif;cursor:pointer}
        <div class="packagePrice">$500 Cash</div>
       </div>
       <div class="packageRate">250.000 RA / 24 saat</div>
-      <button type="button" class="action" onclick="activatePackage('RA 500',250000,250000)">AKTİFLEŞTİR</button>
+      <button type="button" class="action" onclick="openPayment('RA 500',500)">AKTİFLEŞTİR</button>
      </div>
      <div class="package">
       <div class="packageTop">
@@ -133,7 +170,7 @@ button{font-family:Arial,sans-serif;cursor:pointer}
        <div class="packagePrice">$1000 Cash</div>
       </div>
       <div class="packageRate">500.000 RA / 24 saat</div>
-      <button type="button" class="action" onclick="activatePackage('RA 1000',500000,500000)">AKTİFLEŞTİR</button>
+      <button type="button" class="action" onclick="openPayment('RA 1000',1000)">AKTİFLEŞTİR</button>
      </div>
     </div>
    </div>
@@ -220,6 +257,38 @@ button{font-family:Arial,sans-serif;cursor:pointer}
     <div class="notice">RA Coin Mining, aktif kaldıkça zaman içinde RA Coin biriktirmenizi sağlayan bir mining sistemidir. Görevler ve arkadaş davetleriyle kazancınızı artırabilirsiniz.</div>
    </div>
   </div>
+  <div id="paymentPage" class="page">
+   <div class="pageTitle">💳 Ödeme Sayfası</div>
+   <div class="card">
+    <div class="box">
+     <small>Seçilen Paket</small><strong id="paymentPackage">RA 10</strong>
+    </div>
+    <div class="box">
+     <small>Paket Tutarı</small><strong id="paymentAmount">$10</strong>
+    </div>
+    <div class="symbol" style="margin-top:15px">ÖDEME YÖNTEMİ</div>
+    <div class="payMethods">
+     <button type="button" class="payMethod" onclick="selectPayment('BTC')">₿<span>BTC</span></button>
+     <button type="button" class="payMethod" onclick="selectPayment('ETH')">♦<span>ETH</span></button>
+     <button type="button" class="payMethod" onclick="selectPayment('TRX')">◈<span>TRX</span></button>
+     <button type="button" class="payMethod" onclick="selectPayment('LTC')">Ł<span>LTC</span></button>
+    </div>
+    <div id="paymentDetails" class="item" style="display:none">
+     <b id="paymentCoin">BTC</b>
+     <p><strong>Ağ:</strong> <span id="paymentNetwork">Bitcoin</span></p>
+     <p><strong>Ödeme Adresi:</strong></p>
+     <div id="paymentAddress" class="paymentAddress">Adres ayarlanmadı</div>
+     <div class="estimatedPay" style="margin-top:14px;background:#171c27;border-radius:12px;padding:14px">
+      <div style="font-size:13px;color:#9da5b5;margin-bottom:6px">Tahmini Ödenecek Tutar</div>
+      <div id="paymentCryptoAmount" style="font-size:22px;font-weight:800;color:#fff">-</div>
+      <div style="font-size:12px;color:#9da5b5;margin-top:5px">Kur değiştikçe bu miktar değişebilir.</div>
+     </div>
+     <button type="button" class="action" onclick="copyPaymentAddress()">📋 ADRESİ KOPYALA</button>
+    </div>
+    <div class="notice">Seçtiğin coin için ödeme adresini kullanabilir ve adresi tek dokunuşla kopyalayabilirsin.</div>
+    <button type="button" class="action dark" onclick="showPage('package')">← PAKETLERE DÖN</button>
+   </div>
+  </div>
   <div class="nav">
    <button type="button" id="navMining" class="active" onclick="showPage('mining')"><span>⛏️</span>Mining</button>
    <button type="button" id="navPackage" onclick="showPage('package')"><span>📦</span>Paket</button>
@@ -297,7 +366,9 @@ window.showPage=function(page){
  const nav=document.getElementById('nav'+page.charAt(0).toUpperCase()+page.slice(1));
  if(nav)nav.classList.add('active');
  updateScreen();
-};
+ 
+  window.scrollTo(0,0);
+  setTimeout(function(){window.scrollTo(0,0)},50);};
  
 function updateScreen(){
  const b=fmt(data.balance), t=fmt(data.totalClaimed);
@@ -364,48 +435,4 @@ window.task=function(name,reward){
  const now=Date.now();
  if(name==='Günlük giriş'){
   const today=new Date().toDateString();
-  if(data.lastDailyTask===today){alert('Bugünkü ödülü zaten aldın.');return}
-  data.lastDailyTask=today;
- }
- data.balance += Number(reward)||0;
- saveData();updateScreen();
- alert(name+' tamamlandı. +'+fmt(reward)+' RA');
-};
- 
-function getBotUsername(){return 'raMiningBot'}
-function getReferralLink(){
- const id=telegramUser && telegramUser.id ? telegramUser.id : 'demo';
- return 'https://t.me/'+getBotUsername()+'?start=ref_'+id;
-}
- 
-window.copyReferral=function(){
- const link=getReferralLink();
- if(navigator.clipboard && window.isSecureContext){
-  navigator.clipboard.writeText(link).then(function(){alert('Davet linki kopyalandı.\n\n'+link)}).catch(function(){alert(link)});
- }else{alert(link)}
-};
- 
-window.shareReferral=function(){
- const link=getReferralLink();
- const text='RA Coin\'e katıl! 🪙';
- const share='https://t.me/share/url?url='+encodeURIComponent(link)+'&text='+encodeURIComponent(text);
- if(tg && tg.openTelegramLink){tg.openTelegramLink(share)}else{window.open(share,'_blank')}
-};
- 
-loadData();
-calculateOfflineMining();
-updateScreen();
- 
-setInterval(function(){
- addMining(1);
- saveData();
- updateScreen();
-},1000);
- 
-window.addEventListener('beforeunload',saveData);
-document.addEventListener('visibilitychange',function(){if(!document.hidden){calculateOfflineMining();updateScreen()}});
- 
-})();
-</script>
- </body>
-</html>
+  if(data.lastDailyTask===today){alert('Bugünkü ödülü zat
