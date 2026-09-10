@@ -1,294 +1,353 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
 <title>RA Coin</title>
 
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
 <style>
-*{box-sizing:border-box}
+
+*{
+box-sizing:border-box;
+}
+
+html,body{
+margin:0;
+padding:0;
+background:#090b12;
+color:#fff;
+font-family:Arial,sans-serif;
+}
 
 body{
-    margin:0;
-    background:#090b12;
-    color:#fff;
-    font-family:Arial,sans-serif;
+min-height:100vh;
 }
 
 .app{
-    max-width:480px;
-    margin:auto;
-    min-height:100vh;
-    padding:20px 16px 110px;
+max-width:480px;
+margin:auto;
+min-height:100vh;
+padding:20px 16px 105px;
 }
 
 .header{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:18px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:20px;
 }
 
 .logo{
-    font-size:25px;
-    font-weight:bold;
+font-size:25px;
+font-weight:bold;
 }
 
 .status{
-    background:#151923;
-    padding:8px 12px;
-    border-radius:20px;
-    font-size:12px;
+background:#151923;
+padding:8px 12px;
+border-radius:20px;
+font-size:12px;
+color:#8df58d;
 }
 
 .page{
-    display:none;
+display:none;
 }
 
 .page.active{
-    display:block;
-}
-
-.card{
-    background:#121620;
-    border:1px solid #202633;
-    border-radius:22px;
-    padding:20px;
-    margin-top:18px;
-}
-
-.center{
-    text-align:center;
-}
-
-.balance{
-    font-size:38px;
-    font-weight:bold;
-    margin:10px 0;
-}
-
-.symbol{
-    color:#8e96a8;
-    font-size:14px;
-}
-
-.mining{
-    margin:25px auto;
-    width:210px;
-    height:210px;
-    border-radius:50%;
-    border:8px solid #252c3b;
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
-    box-shadow:0 0 35px rgba(80,130,255,.12);
-}
-
-.coin{
-    font-size:42px;
-}
-
-.speed{
-    color:#8e96a8;
-    margin-top:5px;
-}
-
-.claim{
-    width:100%;
-    border:0;
-    border-radius:15px;
-    padding:16px;
-    background:#fff;
-    color:#080a0f;
-    font-size:17px;
-    font-weight:bold;
-}
-
-.grid{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:12px;
-    margin-top:18px;
-}
-
-.box{
-    background:#171c27;
-    border-radius:16px;
-    padding:16px;
-}
-
-.box small{
-    color:#8e96a8;
-}
-
-.box strong{
-    display:block;
-    margin-top:8px;
-    font-size:18px;
+display:block;
 }
 
 .title{
-    font-size:24px;
-    font-weight:bold;
-    margin-bottom:15px;
+font-size:25px;
+font-weight:bold;
+margin:10px 0 18px;
+}
+
+.card{
+background:#121620;
+border:1px solid #202633;
+border-radius:22px;
+padding:20px;
+margin-top:18px;
+}
+
+.center{
+text-align:center;
+}
+
+.symbol{
+color:#8e96a8;
+font-size:14px;
+}
+
+.balance{
+font-size:42px;
+font-weight:bold;
+margin:10px 0;
+}
+
+.mining{
+margin:28px auto;
+width:220px;
+height:220px;
+border-radius:50%;
+border:8px solid #252c3b;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+box-shadow:0 0 35px rgba(80,130,255,.12);
+}
+
+.coin{
+font-size:45px;
+}
+
+.mining-number{
+font-size:25px;
+font-weight:bold;
+margin-top:5px;
+}
+
+.speed{
+color:#8e96a8;
+margin-top:7px;
+}
+
+.claim{
+width:100%;
+border:0;
+border-radius:15px;
+padding:17px;
+background:#fff;
+color:#080a0f;
+font-size:18px;
+font-weight:bold;
+cursor:pointer;
+}
+
+.claim:active{
+transform:scale(.98);
+}
+
+.grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:12px;
+margin-top:18px;
+}
+
+.box{
+background:#171c27;
+border-radius:17px;
+padding:17px;
+min-height:90px;
+}
+
+.box small{
+color:#8e96a8;
+font-size:14px;
+}
+
+.box strong{
+display:block;
+margin-top:9px;
+font-size:18px;
 }
 
 .item{
-    background:#171c27;
-    border-radius:16px;
-    padding:17px;
-    margin-top:12px;
+background:#171c27;
+border-radius:17px;
+padding:17px;
+margin-top:12px;
 }
 
 .item b{
-    font-size:17px;
+font-size:17px;
 }
 
 .item p{
-    color:#9aa2b3;
-    margin:7px 0 0;
-    font-size:14px;
+color:#9aa2b3;
+margin:8px 0 0;
+font-size:14px;
+line-height:1.4;
 }
 
 .action{
-    width:100%;
-    border:0;
-    border-radius:12px;
-    padding:13px;
-    margin-top:12px;
-    font-weight:bold;
-    background:#fff;
-    color:#090b12;
+width:100%;
+border:0;
+border-radius:13px;
+padding:14px;
+margin-top:12px;
+font-weight:bold;
+background:#fff;
+color:#090b12;
+font-size:14px;
+cursor:pointer;
+}
+
+.action:active{
+transform:scale(.98);
+}
+
+.action.dark{
+background:#252c3b;
+color:#fff;
+}
+
+.package-grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:12px;
+margin-top:12px;
 }
 
 .package{
-    background:#171c27;
-    border:1px solid #252c3b;
-    border-radius:18px;
-    padding:18px;
-    margin-top:13px;
-}
-
-.package.featured{
-    border:1px solid #6875ff;
-}
-
-.package-top{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
+background:#171c27;
+border:1px solid #242b3a;
+border-radius:18px;
+padding:17px;
 }
 
 .package-name{
-    font-size:19px;
-    font-weight:bold;
+font-size:20px;
+font-weight:bold;
 }
 
 .package-price{
-    font-size:18px;
-    font-weight:bold;
+font-size:25px;
+font-weight:bold;
+margin-top:8px;
 }
 
-.package-info{
-    color:#9aa2b3;
-    font-size:14px;
-    margin-top:8px;
+.package-rate{
+color:#8e96a8;
+font-size:13px;
+margin-top:6px;
+line-height:1.4;
 }
 
 .package button{
-    width:100%;
-    border:0;
-    border-radius:12px;
-    padding:13px;
-    margin-top:13px;
-    font-weight:bold;
-    background:#fff;
-    color:#090b12;
+width:100%;
+margin-top:12px;
+padding:11px;
+border:0;
+border-radius:11px;
+font-weight:bold;
+background:#fff;
+color:#090b12;
 }
 
 .active-package{
-    background:#151b2a;
-    border:1px solid #30394f;
-    border-radius:16px;
-    padding:16px;
-    margin-bottom:15px;
-}
-
-.nav{
-    position:fixed;
-    bottom:0;
-    left:0;
-    right:0;
-    max-width:480px;
-    margin:auto;
-    background:#11151e;
-    border-top:1px solid #252b38;
-    display:grid;
-    grid-template-columns:repeat(6,1fr);
-    padding:9px 3px;
-    z-index:10;
-}
-
-.nav button{
-    background:none;
-    border:0;
-    color:#7f8798;
-    font-size:10px;
-    padding:2px;
-}
-
-.nav button.active{
-    color:#fff;
-}
-
-.nav span{
-    display:block;
-    font-size:19px;
-    margin-bottom:3px;
-}
-
-.profile{
-    text-align:center;
-    padding:15px;
-}
-
-.avatar{
-    font-size:55px;
-}
-
-.username{
-    font-size:21px;
-    font-weight:bold;
-    margin-top:8px;
+border:1px solid #fff;
 }
 
 .notice{
-    background:#171c27;
-    border-radius:14px;
-    padding:14px;
-    color:#aeb5c4;
-    font-size:13px;
-    margin-top:15px;
+background:#171c27;
+border-radius:15px;
+padding:15px;
+color:#aeb5c4;
+font-size:13px;
+line-height:1.5;
+margin-top:15px;
 }
+
+.profile{
+text-align:center;
+padding:20px;
+}
+
+.avatar{
+font-size:60px;
+}
+
+.username{
+font-size:23px;
+font-weight:bold;
+margin-top:8px;
+}
+
+.nav{
+position:fixed;
+bottom:0;
+left:0;
+right:0;
+max-width:480px;
+margin:auto;
+background:#11151e;
+border-top:1px solid #252b38;
+display:grid;
+grid-template-columns:repeat(6,1fr);
+padding:9px 3px;
+z-index:100;
+}
+
+.nav button{
+background:none;
+border:0;
+color:#7f8798;
+font-size:10px;
+padding:3px 0;
+cursor:pointer;
+}
+
+.nav button.active{
+color:#fff;
+}
+
+.nav span{
+display:block;
+font-size:20px;
+margin-bottom:3px;
+}
+
+.empty{
+text-align:center;
+color:#8e96a8;
+padding:25px 10px;
+}
+
+.green{
+color:#7cff7c;
+}
+
+.gold{
+color:#ffd84d;
+}
+
 </style>
+
 </head>
 
 <body>
 
 <div class="app">
 
+<!-- HEADER -->
+
 <div class="header">
-    <div class="logo">🪙 RA Coin</div>
-    <div class="status">● Mining</div>
+
+<div class="logo">
+🪙 RA Coin
+</div>
+
+<div class="status">
+● Mining
+</div>
+
 </div>
 
 
-<!-- =========================
-     MINING
-========================= -->
+<!-- ========================= -->
+<!-- MINING -->
+<!-- ========================= -->
 
 <div id="miningPage" class="page active">
 
@@ -306,21 +365,23 @@ RA COIN BAKİYESİ
 RA
 </div>
 
+
 <div class="mining">
 
 <div class="coin">
 🪙
 </div>
 
-<strong id="counter">
+<div class="mining-number" id="counter">
 0.0000
-</strong>
+</div>
 
 <div class="speed">
 Mining aktif
 </div>
 
 </div>
+
 
 <button class="claim" onclick="claim()">
 CLAIM
@@ -332,303 +393,256 @@ CLAIM
 <div class="grid">
 
 <div class="box">
-<small>Mining Hızı</small>
+
+<small>
+Mining Hızı
+</small>
+
 <strong id="speedText">
 150 RA / gün
 </strong>
+
 </div>
 
+
 <div class="box">
-<small>Toplam Elde Edilen</small>
-<strong id="total">
+
+<small>
+Toplam Elde Edilen
+</small>
+
+<strong id="totalEarned">
 0.0000 RA
 </strong>
+
 </div>
 
+
 <div class="box">
-<small>Aktif Paket</small>
-<strong id="activePackageSmall">
+
+<small>
+Aktif Paket
+</small>
+
+<strong id="activePackage">
 Başlangıç
 </strong>
+
 </div>
 
+
 <div class="box">
-<small>Referans</small>
+
+<small>
+Referans
+</small>
+
 <strong id="refCount">
 0 kişi
 </strong>
-</div>
 
 </div>
 
 </div>
 
+</div>
 
-<!-- =========================
-     PACKAGES
-========================= -->
 
-<div id="packagesPage" class="page">
+<!-- ========================= -->
+<!-- PAKET -->
+<!-- ========================= -->
+
+<div id="packagePage" class="page">
 
 <div class="title">
-📦 Packages
+📦 Paketler
 </div>
 
-<div class="active-package">
+<div class="notice">
 
-<div class="symbol">
-AKTİF PAKET
+RA Coin paketleri sanal/demo oyun ekonomisindeki
+mining hızlarını artırmak için kullanılır.
+
 </div>
 
-<h2 id="activePackageName">
+
+<div class="package-grid">
+
+<div class="package" id="package10">
+
+<div class="package-name">
 Başlangıç
-</h2>
-
-<p class="symbol">
-Mining:
-<span id="activePackageRate">
-150 RA / gün
-</span>
-</p>
-
-</div>
-
-
-<div class="package">
-
-<div class="package-top">
-
-<div class="package-name">
-🟢 Başlangıç
-</div>
-
-<div class="package-price">
-Ücretsiz
-</div>
-
-</div>
-
-<div class="package-info">
-150 RA / 24 saat
-</div>
-
-<button onclick="selectPackage('Başlangıç',150)">
-AKTİF
-</button>
-
-</div>
-
-
-<div class="package featured">
-
-<div class="package-top">
-
-<div class="package-name">
-💎 $10 Paket
 </div>
 
 <div class="package-price">
 $10
 </div>
 
-</div>
-
-<div class="package-info">
+<div class="package-rate">
 5,000 RA / 24 saat
 </div>
 
-<button onclick="selectPackage('$10 Paket',5000)">
-PAKETİ SEÇ
+<button onclick="selectPackage('10')">
+AKTİF ET
 </button>
 
 </div>
 
 
-<div class="package">
-
-<div class="package-top">
+<div class="package" id="package20">
 
 <div class="package-name">
-💎 $20 Paket
+Bronz
 </div>
 
 <div class="package-price">
 $20
 </div>
 
-</div>
-
-<div class="package-info">
+<div class="package-rate">
 10,000 RA / 24 saat
 </div>
 
-<button onclick="selectPackage('$20 Paket',10000)">
-PAKETİ SEÇ
+<button onclick="selectPackage('20')">
+AKTİF ET
 </button>
 
 </div>
 
 
-<div class="package">
-
-<div class="package-top">
+<div class="package" id="package30">
 
 <div class="package-name">
-💎 $30 Paket
+Silver
 </div>
 
 <div class="package-price">
 $30
 </div>
 
-</div>
-
-<div class="package-info">
+<div class="package-rate">
 15,000 RA / 24 saat
 </div>
 
-<button onclick="selectPackage('$30 Paket',15000)">
-PAKETİ SEÇ
+<button onclick="selectPackage('30')">
+AKTİF ET
 </button>
 
 </div>
 
 
-<div class="package">
-
-<div class="package-top">
+<div class="package" id="package50">
 
 <div class="package-name">
-💎 $50 Paket
+Gold
 </div>
 
 <div class="package-price">
 $50
 </div>
 
-</div>
-
-<div class="package-info">
+<div class="package-rate">
 25,000 RA / 24 saat
 </div>
 
-<button onclick="selectPackage('$50 Paket',25000)">
-PAKETİ SEÇ
+<button onclick="selectPackage('50')">
+AKTİF ET
 </button>
 
 </div>
 
 
-<div class="package">
-
-<div class="package-top">
+<div class="package" id="package100">
 
 <div class="package-name">
-💎 $100 Paket
+Platinum
 </div>
 
 <div class="package-price">
 $100
 </div>
 
-</div>
-
-<div class="package-info">
+<div class="package-rate">
 50,000 RA / 24 saat
 </div>
 
-<button onclick="selectPackage('$100 Paket',50000)">
-PAKETİ SEÇ
+<button onclick="selectPackage('100')">
+AKTİF ET
 </button>
 
 </div>
 
 
-<div class="package">
-
-<div class="package-top">
+<div class="package" id="package200">
 
 <div class="package-name">
-💎 $200 Paket
+Diamond
 </div>
 
 <div class="package-price">
 $200
 </div>
 
-</div>
-
-<div class="package-info">
+<div class="package-rate">
 100,000 RA / 24 saat
 </div>
 
-<button onclick="selectPackage('$200 Paket',100000)">
-PAKETİ SEÇ
+<button onclick="selectPackage('200')">
+AKTİF ET
 </button>
 
 </div>
 
 
-<div class="package">
-
-<div class="package-top">
+<div class="package" id="package500">
 
 <div class="package-name">
-💎 $500 Paket
+Elite
 </div>
 
 <div class="package-price">
 $500
 </div>
 
-</div>
-
-<div class="package-info">
+<div class="package-rate">
 250,000 RA / 24 saat
 </div>
 
-<button onclick="selectPackage('$500 Paket',250000)">
-PAKETİ SEÇ
+<button onclick="selectPackage('500')">
+AKTİF ET
 </button>
 
 </div>
 
 
-<div class="package">
-
-<div class="package-top">
+<div class="package" id="package1000">
 
 <div class="package-name">
-💎 $1000 Paket
+Ultimate
 </div>
 
 <div class="package-price">
 $1000
 </div>
 
-</div>
-
-<div class="package-info">
+<div class="package-rate">
 500,000 RA / 24 saat
 </div>
 
-<button onclick="selectPackage('$1000 Paket',500000)">
-PAKETİ SEÇ
+<button onclick="selectPackage('1000')">
+AKTİF ET
 </button>
 
 </div>
 
-
-<div class="notice">
-Paketler şu anda sanal/demo oyun ekonomisi olarak çalışmaktadır.
 </div>
 
 </div>
 
 
-<!-- =========================
-     ASSETS
-========================= -->
+<!-- ========================= -->
+<!-- ASSETS -->
+<!-- ========================= -->
 
 <div id="assetsPage" class="page">
 
@@ -636,13 +650,14 @@ Paketler şu anda sanal/demo oyun ekonomisi olarak çalışmaktadır.
 💰 Assets
 </div>
 
+
 <div class="card">
 
 <div class="symbol">
-TOPLAM ELDE EDİLEN
+MEVCUT BAKİYE
 </div>
 
-<div class="balance" id="assetTotal">
+<div class="balance" id="assetBalance">
 0.0000
 </div>
 
@@ -658,7 +673,7 @@ RA
 </b>
 
 <p>
-Toplam elde edilen:
+Kullanılabilir bakiye:
 <span id="assetCoin">
 0.0000
 </span>
@@ -671,12 +686,11 @@ RA
 <div class="item">
 
 <b>
-💰 Claim Edilebilir
+📊 Toplam Elde Edilen
 </b>
 
 <p>
-Şu an kullanılabilir:
-<span id="assetAvailable">
+<span id="assetTotal">
 0.0000
 </span>
 RA
@@ -708,8 +722,11 @@ RA
 Minimum çekim: 5,000 RA
 </p>
 
-<button class="action" onclick="withdraw()">
+<button class="action"
+onclick="withdraw()">
+
 PARA ÇEK
+
 </button>
 
 </div>
@@ -719,9 +736,9 @@ PARA ÇEK
 </div>
 
 
-<!-- =========================
-     TASKS
-========================= -->
+<!-- ========================= -->
+<!-- TASKS -->
+<!-- ========================= -->
 
 <div id="tasksPage" class="page">
 
@@ -740,8 +757,11 @@ PARA ÇEK
 Görevi tamamla ve sanal RA ödülü kazan.
 </p>
 
-<button class="action" onclick="task('Telegram görevi')">
+<button class="action"
+onclick="task('Telegram görevi')">
+
 GÖREVİ TAMAMLA
+
 </button>
 
 </div>
@@ -757,8 +777,11 @@ GÖREVİ TAMAMLA
 Arkadaşlarını davet ederek ekstra ödüller kazan.
 </p>
 
-<button class="action" onclick="showPage('friends')">
+<button class="action"
+onclick="showPage('friends')">
+
 DAVET ET
+
 </button>
 
 </div>
@@ -774,8 +797,11 @@ DAVET ET
 Her gün uygulamayı ziyaret et.
 </p>
 
-<button class="action" onclick="task('Günlük giriş')">
+<button class="action"
+onclick="dailyTask()">
+
 ÖDÜLÜ AL
+
 </button>
 
 </div>
@@ -783,9 +809,9 @@ Her gün uygulamayı ziyaret et.
 </div>
 
 
-<!-- =========================
-     FRIENDS
-========================= -->
+<!-- ========================= -->
+<!-- FRIENDS -->
+<!-- ========================= -->
 
 <div id="friendsPage" class="page">
 
@@ -793,9 +819,10 @@ Her gün uygulamayı ziyaret et.
 👥 Friends
 </div>
 
+
 <div class="card center">
 
-<div style="font-size:45px">
+<div style="font-size:50px">
 👥
 </div>
 
@@ -804,7 +831,8 @@ Arkadaşlarını Davet Et
 </h2>
 
 <p class="symbol">
-Her davet edilen kullanıcı referral sistemine eklenir.
+Arkadaşlarını davet ederek referans sistemine
+katılabilirsin.
 </p>
 
 
@@ -821,8 +849,32 @@ Referansların
 </div>
 
 
-<button class="action" onclick="copyReferral()">
+<div class="item">
+
+<b>
+🎁 Referans Ödülü
+</b>
+
+<p>
+Her başarılı referans için sanal RA ödülü.
+</p>
+
+</div>
+
+
+<button class="action"
+onclick="copyReferral()">
+
 🔗 DAVET LİNKİNİ KOPYALA
+
+</button>
+
+
+<button class="action dark"
+onclick="shareReferral()">
+
+📤 ARKADAŞLARINLA PAYLAŞ
+
 </button>
 
 </div>
@@ -830,9 +882,9 @@ Referansların
 </div>
 
 
-<!-- =========================
-     PROFILE
-========================= -->
+<!-- ========================= -->
+<!-- PROFILE -->
+<!-- ========================= -->
 
 <div id="profilePage" class="page">
 
@@ -840,14 +892,19 @@ Referansların
 👤 Profile
 </div>
 
+
 <div class="card profile">
 
 <div class="avatar">
 👤
 </div>
 
-<div class="username" id="username">
+
+<div class="username"
+id="username">
+
 Telegram Kullanıcısı
+
 </div>
 
 
@@ -867,7 +924,20 @@ Demo
 <div class="item">
 
 <b>
-Toplam Elde Edilen RA
+Mevcut RA Bakiye
+</b>
+
+<p id="profileBalance">
+0.0000 RA
+</p>
+
+</div>
+
+
+<div class="item">
+
+<b>
+Toplam Elde Edilen
 </b>
 
 <p id="profileTotal">
@@ -880,11 +950,11 @@ Toplam Elde Edilen RA
 <div class="item">
 
 <b>
-Claim Edilebilir RA
+Aktif Paket
 </b>
 
-<p id="profileAvailable">
-0.0000 RA
+<p id="profilePackage">
+Başlangıç
 </p>
 
 </div>
@@ -896,7 +966,7 @@ Claim Edilebilir RA
 Mining Durumu
 </b>
 
-<p>
+<p class="green">
 🟢 Aktif
 </p>
 
@@ -906,17 +976,20 @@ Mining Durumu
 
 
 <div class="notice">
-Bu uygulamadaki RA Coin ve mining sistemi sanal/demo oyun ekonomisidir.
-</div>
+
+Bu uygulamadaki RA Coin ve mining sistemi
+sanal/demo oyun ekonomisidir.
 
 </div>
 
 </div>
 
+</div>
 
-<!-- =========================
-     NAVIGATION
-========================= -->
+
+<!-- ========================= -->
+<!-- NAVIGATION -->
+<!-- ========================= -->
 
 <div class="nav">
 
@@ -930,8 +1003,8 @@ Mining
 </button>
 
 
-<button id="navPackages"
-onclick="showPage('packages')">
+<button id="navPackage"
+onclick="showPage('package')">
 
 <span>📦</span>
 Paket
@@ -979,577 +1052,815 @@ Profile
 
 <script>
 
-/* =========================================
-   SABİT KAYIT ANAHTARI
-========================================= */
+/* ================================= */
+/* TELEGRAM */
+/* ================================= */
 
-const STORAGE_KEY = "ra_coin_mining_data_v1";
+let tg = null;
+let telegramUser = null;
 
+if(
+window.Telegram &&
+Telegram.WebApp
+){
 
-/* =========================================
-   DEĞİŞKENLER
-========================================= */
+tg = Telegram.WebApp;
 
-let balance = 0;
+tg.ready();
 
-/*
-   totalEarned:
-   Kullanıcının bugüne kadar toplam kazdığı
-   RA miktarı.
+tg.expand();
 
-   CLAIM YAPILINCA SIFIRLANMAZ.
-*/
-let totalEarned = 0;
+telegramUser =
+tg.initDataUnsafe &&
+tg.initDataUnsafe.user
+? tg.initDataUnsafe.user
+: null;
 
-let lastUpdate = Date.now();
-
-let activePackage = "Başlangıç";
-
-let miningPerSecond = 150 / 86400;
-
-let telegramUserId = null;
+}
 
 
-/* =========================================
-   VERİ YÜKLE
-========================================= */
+/* ================================= */
+/* KULLANICI ANAHTARI */
+/* ================================= */
+
+let storageKey = "ra_coin_demo_user";
+
+if(telegramUser && telegramUser.id){
+
+storageKey =
+"ra_coin_user_" +
+telegramUser.id;
+
+}
+
+
+/* ================================= */
+/* PAKETLER */
+/* ================================= */
+
+const packages = {
+
+"10":{
+name:"Başlangıç",
+rate:5000
+},
+
+"20":{
+name:"Bronz",
+rate:10000
+},
+
+"30":{
+name:"Silver",
+rate:15000
+},
+
+"50":{
+name:"Gold",
+rate:25000
+},
+
+"100":{
+name:"Platinum",
+rate:50000
+},
+
+"200":{
+name:"Diamond",
+rate:100000
+},
+
+"500":{
+name:"Elite",
+rate:250000
+},
+
+"1000":{
+name:"Ultimate",
+rate:500000
+}
+
+};
+
+
+/* ================================= */
+/* VERİ */
+/* ================================= */
+
+let data = {
+
+balance:0,
+
+totalEarned:0,
+
+activePackage:"none",
+
+refCount:0,
+
+lastUpdate:Date.now(),
+
+dailyTaskDate:""
+
+};
+
+
+/* ================================= */
+/* VERİYİ YÜKLE */
+/* ================================= */
 
 function loadData(){
 
-    try{
+try{
 
-        const saved =
-            localStorage.getItem(STORAGE_KEY);
+const saved =
+localStorage.getItem(storageKey);
 
+if(saved){
 
-        if(saved){
+const parsed =
+JSON.parse(saved);
 
-            const data =
-                JSON.parse(saved);
+data = {
 
+...data,
+...parsed
 
-            balance =
-                Number(data.balance) || 0;
+};
 
+}
 
-            /*
-               Eski sürümde "total" olarak kayıtlıydı.
-               Yeni sistemde totalEarned olarak kullanıyoruz.
+}catch(error){
 
-               Böylece eski toplam kaybolmuyor.
-            */
+console.log(error);
 
-            if(data.totalEarned !== undefined){
+}
 
-                totalEarned =
-                    Number(data.totalEarned) || 0;
-
-            }else{
-
-                totalEarned =
-                    Number(data.total) || 0;
-            }
-
-
-            lastUpdate =
-                Number(data.lastUpdate)
-                || Date.now();
-
-
-            activePackage =
-                data.activePackage
-                || "Başlangıç";
-
-
-            miningPerSecond =
-                Number(data.miningPerSecond)
-                || (150 / 86400);
-
-
-        }else{
-
-            balance = 0;
-
-            totalEarned = 0;
-
-            lastUpdate = Date.now();
-
-            activePackage = "Başlangıç";
-
-            miningPerSecond =
-                150 / 86400;
-
-            saveData();
-        }
-
-
-    }catch(error){
-
-        console.log(
-            "Veri yükleme hatası:",
-            error
-        );
-    }
 }
 
 
-/* =========================================
-   VERİ KAYDET
-========================================= */
+/* ================================= */
+/* VERİYİ KAYDET */
+/* ================================= */
 
 function saveData(){
 
-    const data = {
+try{
 
-        balance:
-            balance,
+localStorage.setItem(
+storageKey,
+JSON.stringify(data)
+);
 
-        totalEarned:
-            totalEarned,
+}catch(error){
 
-        /*
-           Eski sürümle uyumluluk.
-        */
-        total:
-            totalEarned,
+console.log(error);
 
-        lastUpdate:
-            lastUpdate,
+}
 
-        activePackage:
-            activePackage,
-
-        miningPerSecond:
-            miningPerSecond
-    };
-
-
-    try{
-
-        localStorage.setItem(
-            STORAGE_KEY,
-            JSON.stringify(data)
-        );
-
-    }catch(error){
-
-        console.log(
-            "Veri kayıt hatası:",
-            error
-        );
-    }
 }
 
 
-/* =========================================
-   OFFLINE MINING
-========================================= */
+/* ================================= */
+/* MINING HIZI */
+/* ================================= */
 
-function calculateOfflineMining(){
+function getMiningPerSecond(){
 
-    const now =
-        Date.now();
+if(
+data.activePackage &&
+data.activePackage !== "none" &&
+packages[data.activePackage]
+){
 
+return packages[data.activePackage].rate / 86400;
 
-    let elapsed =
-        (now - lastUpdate) / 1000;
+}
 
+return 150 / 86400;
 
-    if(elapsed < 0){
-
-        elapsed = 0;
-    }
-
-
-    /*
-       Güvenlik:
-       Aşırı uzun sürelerde tarayıcı
-       saçma miktarda mining üretmesin.
-    */
-
-    if(elapsed > 86400){
-
-        elapsed = 86400;
-    }
-
-
-    const earned =
-        elapsed * miningPerSecond;
-
-
-    if(earned > 0){
-
-        balance += earned;
-
-        totalEarned += earned;
-    }
-
-
-    lastUpdate =
-        now;
-
-
-    saveData();
 }
 
 
-/* =========================================
-   SAYFA DEĞİŞTİR
-========================================= */
+/* ================================= */
+/* GEÇEN SÜREYİ HESAPLA */
+/* ================================= */
 
-function showPage(page){
+function calculateMining(){
 
-    document
-        .querySelectorAll(".page")
-        .forEach(function(el){
+const now = Date.now();
 
-            el.classList.remove("active");
+let elapsed =
+(now - data.lastUpdate) / 1000;
 
-        });
+if(elapsed < 0){
+elapsed = 0;
+}
 
+if(elapsed > 86400 * 7){
+elapsed = 86400 * 7;
+}
 
-    const selected =
-        document.getElementById(
-            page + "Page"
-        );
+const earned =
+elapsed *
+getMiningPerSecond();
 
+data.balance += earned;
 
-    if(selected){
+data.lastUpdate = now;
 
-        selected.classList.add("active");
-    }
+saveData();
 
-
-    document
-        .querySelectorAll(".nav button")
-        .forEach(function(el){
-
-            el.classList.remove("active");
-
-        });
-
-
-    const navButton =
-        document.getElementById(
-            "nav" +
-            page.charAt(0).toUpperCase() +
-            page.slice(1)
-        );
-
-
-    if(navButton){
-
-        navButton.classList.add("active");
-    }
-
-
-    updateScreen();
 }
 
 
-/* =========================================
-   MINING
-========================================= */
-
-function mine(){
-
-    balance +=
-        miningPerSecond;
-
-
-    totalEarned +=
-        miningPerSecond;
-
-
-    lastUpdate =
-        Date.now();
-
-
-    saveData();
-
-    updateScreen();
-}
-
-
-/* =========================================
-   EKRANI GÜNCELLE
-========================================= */
+/* ================================= */
+/* EKRAN */
+/* ================================= */
 
 function updateScreen(){
 
-    const balanceText =
-        balance.toFixed(4);
+const balance =
+data.balance || 0;
+
+const totalEarned =
+data.totalEarned || 0;
 
 
-    const totalText =
-        totalEarned.toFixed(4);
+/* BAKİYE */
+
+document.getElementById(
+"balance"
+).innerText =
+balance.toFixed(4);
+
+document.getElementById(
+"counter"
+).innerText =
+balance.toFixed(4);
 
 
-    /* MINING */
+/* TOPLAM ELDE EDİLEN */
 
-    document.getElementById(
-        "balance"
-    ).innerText =
-        balanceText;
+document.getElementById(
+"totalEarned"
+).innerText =
+totalEarned.toFixed(4) +
+" RA";
 
+document.getElementById(
+"assetTotal"
+).innerText =
+totalEarned.toFixed(4);
 
-    document.getElementById(
-        "counter"
-    ).innerText =
-        balanceText;
-
-
-    document.getElementById(
-        "total"
-    ).innerText =
-        totalText +
-        " RA";
-
-
-    /* ASSETS */
-
-    document.getElementById(
-        "assetTotal"
-    ).innerText =
-        totalText;
+document.getElementById(
+"profileTotal"
+).innerText =
+totalEarned.toFixed(4) +
+" RA";
 
 
-    document.getElementById(
-        "assetCoin"
-    ).innerText =
-        totalText;
+/* ASSETS */
+
+document.getElementById(
+"assetBalance"
+).innerText =
+balance.toFixed(4);
+
+document.getElementById(
+"assetCoin"
+).innerText =
+balance.toFixed(4);
 
 
-    document.getElementById(
-        "assetAvailable"
-    ).innerText =
-        balanceText;
+/* PROFİL */
+
+document.getElementById(
+"profileBalance"
+).innerText =
+balance.toFixed(4) +
+" RA";
 
 
-    /* PROFILE */
+/* REFERANS */
 
-    document.getElementById(
-        "profileTotal"
-    ).innerText =
-        totalText +
-        " RA";
+document.getElementById(
+"refCount"
+).innerText =
+data.refCount +
+" kişi";
 
-
-    document.getElementById(
-        "profileAvailable"
-    ).innerText =
-        balanceText +
-        " RA";
-
-
-    /* PAKET */
-
-    document.getElementById(
-        "activePackageSmall"
-    ).innerText =
-        activePackage;
+document.getElementById(
+"friendCount"
+).innerText =
+data.refCount +
+" kişi";
 
 
-    document.getElementById(
-        "activePackageName"
-    ).innerText =
-        activePackage;
+/* PAKET */
+
+let packageName =
+"Başlangıç";
+
+let packageRate =
+150;
+
+if(
+data.activePackage &&
+data.activePackage !== "none" &&
+packages[data.activePackage]
+){
+
+packageName =
+packages[data.activePackage].name;
+
+packageRate =
+packages[data.activePackage].rate;
+
+}
+
+document.getElementById(
+"activePackage"
+).innerText =
+packageName;
+
+document.getElementById(
+"profilePackage"
+).innerText =
+packageName;
 
 
-    const dailyRate =
-        miningPerSecond * 86400;
+/* MINING HIZI */
+
+document.getElementById(
+"speedText"
+).innerText =
+packageRate.toLocaleString("tr-TR") +
+" RA / gün";
 
 
-    document.getElementById(
-        "activePackageRate"
-    ).innerText =
-        Math.round(dailyRate) +
-        " RA / gün";
+/* PAKET GÖRÜNÜMÜ */
+
+document.querySelectorAll(
+".package"
+).forEach(function(el){
+
+el.classList.remove(
+"active-package"
+);
+
+});
 
 
-    document.getElementById(
-        "speedText"
-    ).innerText =
-        Math.round(dailyRate) +
-        " RA / gün";
+if(
+data.activePackage &&
+data.activePackage !== "none"
+){
+
+const selected =
+document.getElementById(
+"package" +
+data.activePackage
+);
+
+if(selected){
+
+selected.classList.add(
+"active-package"
+);
+
+}
+
+}
+
 }
 
 
-/* =========================================
-   CLAIM
-========================================= */
+/* ================================= */
+/* SAYFA DEĞİŞTİR */
+/* ================================= */
+
+function showPage(page){
+
+calculateMining();
+
+document.querySelectorAll(
+".page"
+).forEach(function(el){
+
+el.classList.remove(
+"active"
+);
+
+});
+
+
+const target =
+document.getElementById(
+page + "Page"
+);
+
+if(target){
+
+target.classList.add(
+"active"
+);
+
+}
+
+
+document.querySelectorAll(
+".nav button"
+).forEach(function(el){
+
+el.classList.remove(
+"active"
+);
+
+});
+
+
+const nav =
+document.getElementById(
+"nav" +
+page.charAt(0).toUpperCase() +
+page.slice(1)
+);
+
+if(nav){
+
+nav.classList.add(
+"active"
+);
+
+}
+
+updateScreen();
+
+}
+
+
+/* ================================= */
+/* CLAIM */
+/* ================================= */
 
 function claim(){
 
-    if(balance <= 0){
+calculateMining();
 
-        alert(
-            "Claim edilecek RA bulunmuyor."
-        );
+if(data.balance <= 0){
 
-        return;
-    }
+alert(
+"Claim edilecek RA bulunmuyor."
+);
 
+return;
 
-    const claimed =
-        balance.toFixed(4);
-
-
-    /*
-       DİKKAT:
-
-       Sadece claim edilebilir bakiye
-       sıfırlanıyor.
-
-       totalEarned ASLA sıfırlanmıyor.
-    */
-
-    balance = 0;
-
-
-    lastUpdate =
-        Date.now();
-
-
-    saveData();
-
-    updateScreen();
-
-
-    alert(
-        claimed +
-        " RA claim edildi."
-    );
 }
 
 
-/* =========================================
-   PAKET SEÇ
-========================================= */
+/* CLAIM EDİLEN MİKTARI TOPLAMA EKLE */
 
-function selectPackage(
-    packageName,
-    dailyRA
-){
+const claimed =
+data.balance;
 
-    if(packageName === "Başlangıç"){
-
-        activePackage =
-            packageName;
-
-        miningPerSecond =
-            dailyRA / 86400;
-
-        lastUpdate =
-            Date.now();
-
-        saveData();
-
-        updateScreen();
-
-        alert(
-            "Başlangıç paketi aktif."
-        );
-
-        return;
-    }
+data.totalEarned +=
+claimed;
 
 
-    const confirmPackage =
-        confirm(
-            packageName +
-            " demo olarak aktif edilsin mi?"
-        );
+/* BAKİYE SIFIRLANIR */
+
+data.balance = 0;
 
 
-    if(!confirmPackage){
+/* ÇOK ÖNEMLİ:
+   LAST UPDATE ŞİMDİ OLARAK KALIR.
+   BÖYLECE MINING DURMAZ.
+*/
 
-        return;
-    }
+data.lastUpdate =
+Date.now();
 
+saveData();
 
-    activePackage =
-        packageName;
+updateScreen();
 
+alert(
+claimed.toFixed(4) +
+" RA başarıyla claim edildi."
+);
 
-    miningPerSecond =
-        dailyRA / 86400;
-
-
-    lastUpdate =
-        Date.now();
-
-
-    saveData();
-
-    updateScreen();
-
-
-    alert(
-        packageName +
-        " aktif edildi."
-    );
 }
 
 
-/* =========================================
-   WITHDRAW
-========================================= */
+/* ================================= */
+/* PAKET SEÇ */
+/* ================================= */
 
-function withdraw(){
+function selectPackage(id){
 
-    if(balance < 5000){
+if(!packages[id]){
+return;
+}
 
-        alert(
-            "Minimum çekim miktarı 5,000 RA."
-        );
+const selected =
+packages[id];
 
-        return;
-    }
+data.activePackage =
+id;
 
+data.lastUpdate =
+Date.now();
 
-    alert(
-        "Çekim talebi demo modunda oluşturuldu."
-    );
+saveData();
+
+updateScreen();
+
+alert(
+selected.name +
+" paketi sanal/demo olarak aktif edildi."
+);
+
+showPage("mining");
+
 }
 
 
-/* =========================================
-   TASK
-========================================= */
+/* ================================= */
+/* TASK */
+/* ================================= */
 
 function task(name){
 
-    alert(
-        name +
-        " görevi demo olarak tamamlandı."
-    );
+alert(
+name +
+" görevi demo olarak tamamlandı."
+);
+
 }
 
 
-/* =========================================
-   TELEGRAM USER
-========================================= */
+/* ================================= */
+/* GÜNLÜK GÖREV */
+/* ================================= */
 
-function loadTelegramUser(){
+function dailyTask(){
 
-    if(
-        window.Telegram &&
-        Telegram.WebApp
-    ){
+const today =
+new Date()
+.toISOString()
+.slice(0,10);
 
-        Telegram.WebApp.ready();
+if(
+data.dailyTaskDate === today
+){
 
-        Telegram.WebApp.expand();
+alert(
+"Bugünkü ödülü zaten aldın."
+);
+
+return;
+
+}
+
+data.dailyTaskDate =
+today;
+
+data.balance += 25;
+
+data.lastUpdate =
+Date.now();
+
+saveData();
+
+updateScreen();
+
+alert(
+"🎁 25 RA günlük görev ödülü eklendi."
+);
+
+}
 
 
-        const user =
-            Telegram.WebApp
-            .initDataUnsafe
-            .user;
+/* ================================= */
+/* REFERRAL */
+/* ================================= */
+
+const BOT_USERNAME =
+"raMiningBot";
 
 
-        if(user){
+function getReferralLink(){
 
-            telegramUserId =
-                
+let userCode =
+"demo";
+
+if(
+telegramUser &&
+telegramUser.id
+){
+
+userCode =
+telegramUser.id;
+
+}
+
+return (
+"https://t.me/" +
+BOT_USERNAME +
+"?start=ref_" +
+userCode
+);
+
+}
+
+
+/* ================================= */
+/* REFERANS KOPYALA */
+/* ================================= */
+
+function copyReferral(){
+
+const link =
+getReferralLink();
+
+if(
+navigator.clipboard &&
+navigator.clipboard.writeText
+){
+
+navigator.clipboard
+.writeText(link)
+.then(function(){
+
+alert(
+"🔗 Davet linki kopyalandı."
+);
+
+})
+.catch(function(){
+
+alert(link);
+
+});
+
+}else{
+
+alert(link);
+
+}
+
+}
+
+
+/* ================================= */
+/* REFERANS PAYLAŞ */
+/* ================================= */
+
+function shareReferral(){
+
+const link =
+getReferralLink();
+
+const text =
+"🪙 RA Coin'e katıl!";
+
+if(
+tg &&
+tg.openTelegramLink
+){
+
+const shareUrl =
+"https://t.me/share/url?url=" +
+encodeURIComponent(link) +
+"&text=" +
+encodeURIComponent(text);
+
+tg.openTelegramLink(
+shareUrl
+);
+
+}else{
+
+window.open(
+"https://t.me/share/url?url=" +
+encodeURIComponent(link) +
+"&text=" +
+encodeURIComponent(text),
+"_blank"
+);
+
+}
+
+}
+
+
+/* ================================= */
+/* WITHDRAW */
+/* ================================= */
+
+function withdraw(){
+
+calculateMining();
+
+if(
+data.balance < 5000
+){
+
+alert(
+"Minimum çekim miktarı 5,000 RA."
+);
+
+return;
+
+}
+
+alert(
+"Çekim talebi demo modunda oluşturuldu."
+);
+
+}
+
+
+/* ================================= */
+/* TELEGRAM PROFİL */
+/* ================================= */
+
+function loadTelegramProfile(){
+
+if(!telegramUser){
+
+return;
+
+}
+
+
+let displayName =
+telegramUser.first_name ||
+"Telegram Kullanıcısı";
+
+
+if(
+telegramUser.last_name
+){
+
+displayName +=
+" " +
+telegramUser.last_name;
+
+}
+
+
+if(
+telegramUser.username
+){
+
+displayName =
+"@" +
+telegramUser.username;
+
+}
+
+
+document.getElementById(
+"username"
+).innerText =
+displayName;
+
+
+document.getElementById(
+"userId"
+).innerText =
+telegramUser.id;
+
+}
+
+
+/* ================================= */
+/* BAŞLANGIÇ */
+/* ================================= */
+
+loadData();
+
+calculateMining();
+
+loadTelegramProfile();
+
+updateScreen();
+
+
+/* ================================= */
+/* HER SANİYE GÜNCELLE */
+/* ================================= */
+
+setInterval(function(){
+
+calculateMining();
+
+updateScreen();
+
+},1000);
+
+
+/* ================================= */
+/* SAYFA GİZLENİRSE KAYDET */
+    
