@@ -1,11 +1,11 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="tr">
- <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>RA Coin</title>
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <style>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>RA Coin</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;padding:0;background:#090b12;color:#fff;font-family:Arial,sans-serif;min-height:100%;overflow-x:hidden}
 button{font-family:Arial,sans-serif;cursor:pointer}
@@ -55,252 +55,120 @@ pointer-events:none;z-index:0
 .claim,.action{width:100%;border:0;border-radius:15px;padding:16px;font-size:16px;font-weight:bold}.claim{background:#fff;color:#090b12}.action{background:#fff;color:#090b12;margin-top:12px}.action.dark{background:#202633;color:#fff}.action:active,.claim:active{transform:scale(.98)}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}.box{background:#171c27;border-radius:17px;padding:17px;min-height:82px}.box small{color:#929aaa;font-size:14px}.box strong{display:block;margin-top:8px;font-size:18px}
 .item{background:#171c27;border-radius:17px;padding:17px;margin-top:12px}.item b{font-size:17px}.item p{color:#9aa2b3;margin:8px 0 0;font-size:14px;line-height:1.4}
-.package{background:#171c27;border:1px solid #252c3b;border-radius:18px;padding:18px;margin-top:13px}.package.activePackage{border:1px solid #62d88b}.packageTop{display:flex;justify-content:space-between;align-items:center;gap:10px}.packageName{font-size:19px;font-weight:bold}.packagePrice{font-size:17px;font-weight:bold}.packageRate{color:#9aa2b3;margin-top:9px}.package button{margin-top:12px}
+.package{background:#171c27;border:1px solid #252c3b;border-radius:18px;padding:18px;margin-top:13px}.package.is-active{border:1px solid #62d88b}
+.packageTop{display:flex;justify-content:space-between;align-items:center;gap:10px}.packageName{font-size:19px;font-weight:bold}.packagePrice{font-size:17px;font-weight:bold}.packageRate{color:#9aa2b3;margin-top:9px}.package button{margin-top:12px}
 .profile{text-align:center}.avatar{font-size:60px}.username{font-size:22px;font-weight:bold;margin-top:8px}.notice{background:#171c27;border-radius:15px;padding:15px;color:#aeb5c4;font-size:13px;line-height:1.5;margin-top:15px}
 .nav{position:fixed;left:0;right:0;bottom:0;width:100%;max-width:480px;margin:auto;background:#11151e;border-top:1px solid #252b38;display:grid;grid-template-columns:repeat(6,1fr);padding:9px 3px;z-index:9999}.nav button{background:none;border:0;color:#7f8798;font-size:10px;padding:3px 0}.nav button.active{color:#fff}.nav span{display:block;font-size:21px;margin-bottom:3px}
 .green{color:#62d88b}.yellow{color:#ffd166}.usd-big{color:#9aa2b3;font-size:15px;margin-top:-4px}.usd-inline{color:#9aa2b3;font-size:12px;font-weight:normal;margin-left:4px}
 .payMethods{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}.payMethod{border:1px solid #252c3b;background:#171c27;color:#fff;border-radius:16px;padding:16px;font-size:20px;font-weight:800}.payMethod span{margin-left:8px}.payMethod:active{transform:scale(.98)}.paymentAddress{word-break:break-all;background:#0d1119;border-radius:12px;padding:12px;color:#fff;font-size:13px;line-height:1.45}</style>
- </head>
- <body>
-  <div class="app">
-   <div class="header">
-    <div class="logo">🪙 RA Coin</div>
-    <div class="status">● Mining</div>
-   </div>
-   <div id="miningPage" class="page active">
-    <div class="card center">
-     <div class="symbol">RA COIN BAKİYESİ</div>
-     <div class="balance" id="balance">0.0000</div>
-     <div class="usd-big" id="balanceUsd">$0.000000</div>
-     <div class="symbol">RA</div>
-     <div class="mining">
-      <div class="coin">🪙</div>
-      <div class="counter" id="counter">0.0000</div>
-      <div class="miningText">Mining aktif</div>
-     </div>
-     <button type="button" class="claim" onclick="claim()">CLAIM</button>
-    </div>
-    <div class="grid">
-     <div class="box">
-      <small>Mining Hızı</small><strong id="speedText">150 RA / gün</strong>
-     </div>
-     <div class="box">
-      <small>Toplam Elde Edilen</small><strong id="totalEarned">0.0000 RA <span class="usd-inline" id="totalEarnedUsd">$0.000000</span></strong>
-     </div>
-     <div class="box">
-      <small>Aktif Paket</small><strong id="activePackage">Başlangıç</strong>
-     </div>
-     <div class="box">
-      <small>Referans</small><strong id="refCount">0 kişi</strong>
-     </div>
-    </div>
-   </div>
-   <div id="packagePage" class="page">
-    <div class="pageTitle">📦 Paketler</div>
-    <div class="card">
-     <div class="symbol">MADENCİLİK PAKETLERİ</div>
-     <div class="notice">Paket seçimini yapın ve tercih ettiğiniz ödeme yöntemiyle devam edin.</div>
-     <div class="package activePackage">
-      <div class="packageTop">
-       <div class="packageName">🟢 Başlangıç</div>
-       <div class="packagePrice">ÜCRETSİZ</div>
-      </div>
-      <div class="packageRate">150 RA / gün</div>
-      <button type="button" class="action" onclick="activatePackage('Başlangıç',150,0)">AKTİF ET</button>
-     </div>
-     <div class="package">
-      <div class="packageTop">
-       <div class="packageName">💎 RA 10</div>
-       <div class="packagePrice">$10 Cash</div>
-      </div>
-      <div class="packageRate">5.000 RA / 24 saat</div>
-      <button type="button" class="action" onclick="openPayment('RA 10',10)">AKTİFLEŞTİR</button>
-     </div>
-     <div class="package">
-      <div class="packageTop">
-       <div class="packageName">💎 RA 20</div>
-       <div class="packagePrice">$20 Cash</div>
-      </div>
-      <div class="packageRate">10.000 RA / 24 saat</div>
-      <button type="button" class="action" onclick="openPayment('RA 20',20)">AKTİFLEŞTİR</button>
-     </div>
-     <div class="package">
-      <div class="packageTop">
-       <div class="packageName">💎 RA 30</div>
-       <div class="packagePrice">$30 Cash</div>
-      </div>
-      <div class="packageRate">15.000 RA / 24 saat</div>
-      <button type="button" class="action" onclick="openPayment('RA 30',30)">AKTİFLEŞTİR</button>
-     </div>
-     <div class="package">
-      <div class="packageTop">
-       <div class="packageName">🚀 RA 50</div>
-       <div class="packagePrice">$50 Cash</div>
-      </div>
-      <div class="packageRate">25.000 RA / 24 saat</div>
-      <button type="button" class="action" onclick="openPayment('RA 50',50)">AKTİFLEŞTİR</button>
-     </div>
-     <div class="package">
-      <div class="packageTop">
-       <div class="packageName">🚀 RA 100</div>
-       <div class="packagePrice">$100 Cash</div>
-      </div>
-      <div class="packageRate">50.000 RA / 24 saat</div>
-      <button type="button" class="action" onclick="openPayment('RA 100',100)">AKTİFLEŞTİR</button>
-     </div>
-     <div class="package">
-      <div class="packageTop">
-       <div class="packageName">🔥 RA 200</div>
-       <div class="packagePrice">$200 Cash</div>
-      </div>
-      <div class="packageRate">100.000 RA / 24 saat</div>
-      <button type="button" class="action" onclick="openPayment('RA 200',200)">AKTİFLEŞTİR</button>
-     </div>
-     <div class="package">
-      <div class="packageTop">
-       <div class="packageName">🔥 RA 500</div>
-       <div class="packagePrice">$500 Cash</div>
-      </div>
-      <div class="packageRate">250.000 RA / 24 saat</div>
-      <button type="button" class="action" onclick="openPayment('RA 500',500)">AKTİFLEŞTİR</button>
-     </div>
-     <div class="package">
-      <div class="packageTop">
-       <div class="packageName">👑 RA 1000</div>
-       <div class="packagePrice">$1000 Cash</div>
-      </div>
-      <div class="packageRate">500.000 RA / 24 saat</div>
-      <button type="button" class="action" onclick="openPayment('RA 1000',1000)">AKTİFLEŞTİR</button>
-     </div>
-    </div>
-   </div>
-   <div id="assetsPage" class="page">
-    <div class="pageTitle">💰 Assets</div>
-    <div class="card">
-     <div class="symbol">MEVCUT BAKİYE</div>
-     <div class="balance" id="assetBalance">0.0000</div>
-     <div class="usd-big" id="assetBalanceUsd">$0.000000</div>
-     <div class="symbol">RA</div>
-     <div class="item">
-      <b>💎 RA Coin</b>
-      <p>Mevcut bakiye: <span id="assetCoin">0.0000</span> RA · <span id="assetCoinUsd">$0.000000</span></p>
-     </div>
-     <div class="item">
-      <b>📊 Toplam Elde Edilen</b>
-      <p id="assetTotalEarned">0.0000 RA · <span id="assetTotalEarnedUsd">$0.000000</span></p>
-     </div>
-     <div class="item">
-      <b>💵 Referans Değeri</b>
-      <p>1 RA = $0.00200</p>
-     </div>
-     <div class="item">
-      <b>📤 Çekim</b>
-      <p>Minimum çekim: 5.000 RA</p>
-      <button type="button" class="action" onclick="withdraw()">PARA ÇEK</button>
-     </div>
-    </div>
-   </div>
-   <div id="tasksPage" class="page">
-    <div class="pageTitle">🎁 Tasks</div>
-    <div class="item">
-     <b>📱 Telegram'a katıl</b>
-     <p>Görevi tamamla ve sanal RA ödülü kazan.</p>
-     <button type="button" class="action" onclick="task('Telegram görevi',100)">GÖREVİ TAMAMLA</button>
-    </div>
-    <div class="item">
-     <b>👥 Arkadaş davet et</b>
-     <p>Arkadaşlarını davet ederek ekstra ödüller kazan.</p>
-     <button type="button" class="action" onclick="showPage('friends')">DAVET ET</button>
-    </div>
-    <div class="item">
-     <b>🔥 Günlük giriş</b>
-     <p>Her gün uygulamayı ziyaret et.</p>
-     <button type="button" class="action" onclick="task('Günlük giriş',250)">ÖDÜLÜ AL</button>
-    </div>
-   </div>
-   <div id="friendsPage" class="page">
-    <div class="pageTitle">👥 Friends</div>
-    <div class="card center">
-     <div style="font-size:50px">👥</div>
-     <h2>Arkadaşlarını Davet Et</h2>
-     <p class="symbol">Arkadaşlarını davet ederek referans sayını artır.</p>
-     <div class="item">
-      <b>Referansların</b>
-      <p id="friendCount">0 kişi</p>
-     </div>
-     <button type="button" class="action" onclick="copyReferral()">🔗 DAVET LİNKİNİ KOPYALA</button>
-     <button type="button" class="action dark" onclick="shareReferral()">📤 ARKADAŞLARLA PAYLAŞ</button>
-    </div>
-   </div>
-   <div id="profilePage" class="page">
-    <div class="pageTitle">👤 Profile</div>
-    <div class="card profile">
-     <div class="avatar">👤</div>
-     <div class="username" id="username">Telegram Kullanıcısı</div>
-     <div class="item">
-      <b>Telegram ID</b>
-      <p id="userId">Telegram üzerinden algılanıyor...</p>
-     </div>
-     <div class="item">
-      <b>RA Bakiye</b>
-      <p id="profileBalance">0.0000 RA · <span id="profileBalanceUsd">$0.000000</span></p>
-     </div>
-     <div class="item">
-      <b>Toplam Elde Edilen</b>
-      <p><span style="display:block">Toplanan Adet: <strong id="profileTotal">0.0000 RA</strong></span><span style="display:block;margin-top:6px">$ Karşılığı: <strong id="profileTotalUsd">$0.000000</strong></span></p>
-     </div>
-     <div class="item">
-      <b>Mining Durumu</b>
-      <p class="green">🟢 Aktif</p>
-     </div>
-    </div>
-    <div class="notice">RA Coin Mining, aktif kaldıkça zaman içinde RA Coin biriktirmenizi sağlayan bir mining sistemidir. Görevler ve arkadaş davetleriyle kazancınızı artırabilirsiniz.</div>
-   </div>
-  </div>
-  <div id="paymentPage" class="page">
-   <div class="pageTitle">💳 Ödeme Sayfası</div>
-   <div class="card">
-    <div class="box">
-     <small>Seçilen Paket</small><strong id="paymentPackage">RA 10</strong>
-    </div>
-    <div class="box">
-     <small>Paket Tutarı</small><strong id="paymentAmount">$10</strong>
-    </div>
-    <div class="symbol" style="margin-top:15px">ÖDEME YÖNTEMİ</div>
-    <div class="payMethods">
-     <button type="button" class="payMethod" onclick="selectPayment('BTC')">₿<span>BTC</span></button>
-     <button type="button" class="payMethod" onclick="selectPayment('ETH')">♦<span>ETH</span></button>
-     <button type="button" class="payMethod" onclick="selectPayment('TRX')">◈<span>TRX</span></button>
-     <button type="button" class="payMethod" onclick="selectPayment('LTC')">Ł<span>LTC</span></button>
-    </div>
-    <div id="paymentDetails" class="item" style="display:none">
-     <b id="paymentCoin">BTC</b>
-     <p><strong>Ağ:</strong> <span id="paymentNetwork">Bitcoin</span></p>
-     <p><strong>Ödeme Adresi:</strong></p>
-     <div id="paymentAddress" class="paymentAddress">Adres ayarlanmadı</div>
-     <div class="estimatedPay" style="margin-top:14px;background:#171c27;border-radius:12px;padding:14px">
-      <div style="font-size:13px;color:#9da5b5;margin-bottom:6px">Tahmini Ödenecek Tutar</div>
-      <div id="paymentCryptoAmount" style="font-size:22px;font-weight:800;color:#fff">-</div>
-      <div style="font-size:12px;color:#9da5b5;margin-top:5px">Kur değiştikçe bu miktar değişebilir.</div>
-     </div>
-     <button type="button" class="action" onclick="copyPaymentAddress()">📋 ADRESİ KOPYALA</button>
-    </div>
-    <div class="notice">Seçtiğin coin için ödeme adresini kullanabilir ve adresi tek dokunuşla kopyalayabilirsin.</div>
-    <button type="button" class="action dark" onclick="showPage('package')">← PAKETLERE DÖN</button>
-   </div>
-  </div>
-  <div class="nav">
-   <button type="button" id="navMining" class="active" onclick="showPage('mining')"><span>⛏️</span>Mining</button>
-   <button type="button" id="navPackage" onclick="showPage('package')"><span>📦</span>Paket</button>
-   <button type="button" id="navAssets" onclick="showPage('assets')"><span>💰</span>Assets</button>
-   <button type="button" id="navTasks" onclick="showPage('tasks')"><span>🎁</span>Tasks</button>
-   <button type="button" id="navFriends" onclick="showPage('friends')"><span>👥</span>Friends</button>
-   <button type="button" id="navProfile" onclick="showPage('profile')"><span>👤</span>Profile</button>
-  </div>
-  <script>
+</head>
+<body>
+<div class="app">
+<div class="header"><div class="logo">🪙 RA Coin</div><div class="status">● Mining</div></div>
+
+<div id="miningPage" class="page active">
+<div class="card center">
+<div class="symbol">RA COIN BAKİYESİ</div>
+<div class="balance" id="balance">0.0000</div><div class="usd-big" id="balanceUsd">$0.000000</div><div class="symbol">RA</div>
+<div class="mining"><div class="coin">🪙</div><div class="counter" id="counter">0.0000</div><div class="miningText">Mining aktif</div></div>
+<button type="button" class="claim" onclick="claim()">CLAIM</button>
+</div>
+<div class="grid">
+<div class="box"><small>Mining Hızı</small><strong id="speedText">150 RA / gün</strong></div>
+<div class="box"><small>Toplam Elde Edilen</small><strong id="totalEarned">0.0000 RA <span class="usd-inline" id="totalEarnedUsd">$0.000000</span></strong></div>
+<div class="box"><small>Aktif Paket</small><strong id="activePackageText">Başlangıç</strong></div>
+<div class="box"><small>Referans</small><strong id="refCount">0 kişi</strong></div>
+</div></div>
+
+<div id="packagePage" class="page">
+<div class="pageTitle">📦 Paketler</div>
+<div class="card">
+<div class="symbol">MADENCİLİK PAKETLERİ</div>
+<div class="notice">Paket seçimini yapın ve tercih ettiğiniz ödeme yöntemiyle devam edin.</div>
+<div class="package is-active"><div class="packageTop"><div class="packageName">🟢 Başlangıç</div><div class="packagePrice">ÜCRETSİZ</div></div><div class="packageRate">150 RA / gün</div><button type="button" class="action" onclick="activatePackage('Başlangıç',150,0)">AKTİF ET</button></div>
+<div class="package"><div class="packageTop"><div class="packageName">💎 RA 10</div><div class="packagePrice">$10 Cash</div></div><div class="packageRate">5.000 RA / 24 saat</div><button type="button" class="action" onclick="openPayment('RA 10',10)">AKTİFLEŞTİR</button></div>
+<div class="package"><div class="packageTop"><div class="packageName">💎 RA 20</div><div class="packagePrice">$20 Cash</div></div><div class="packageRate">10.000 RA / 24 saat</div><button type="button" class="action" onclick="openPayment('RA 20',20)">AKTİFLEŞTİR</button></div>
+<div class="package"><div class="packageTop"><div class="packageName">💎 RA 30</div><div class="packagePrice">$30 Cash</div></div><div class="packageRate">15.000 RA / 24 saat</div><button type="button" class="action" onclick="openPayment('RA 30',30)">AKTİFLEŞTİR</button></div>
+<div class="package"><div class="packageTop"><div class="packageName">🚀 RA 50</div><div class="packagePrice">$50 Cash</div></div><div class="packageRate">25.000 RA / 24 saat</div><button type="button" class="action" onclick="openPayment('RA 50',50)">AKTİFLEŞTİR</button></div>
+<div class="package"><div class="packageTop"><div class="packageName">🚀 RA 100</div><div class="packagePrice">$100 Cash</div></div><div class="packageRate">50.000 RA / 24 saat</div><button type="button" class="action" onclick="openPayment('RA 100',100)">AKTİFLEŞTİR</button></div>
+<div class="package"><div class="packageTop"><div class="packageName">🔥 RA 200</div><div class="packagePrice">$200 Cash</div></div><div class="packageRate">100.000 RA / 24 saat</div><button type="button" class="action" onclick="openPayment('RA 200',200)">AKTİFLEŞTİR</button></div>
+<div class="package"><div class="packageTop"><div class="packageName">🔥 RA 500</div><div class="packagePrice">$500 Cash</div></div><div class="packageRate">250.000 RA / 24 saat</div><button type="button" class="action" onclick="openPayment('RA 500',500)">AKTİFLEŞTİR</button></div>
+<div class="package"><div class="packageTop"><div class="packageName">👑 RA 1000</div><div class="packagePrice">$1000 Cash</div></div><div class="packageRate">500.000 RA / 24 saat</div><button type="button" class="action" onclick="openPayment('RA 1000',1000)">AKTİFLEŞTİR</button></div>
+</div></div>
+
+<div id="assetsPage" class="page">
+<div class="pageTitle">💰 Assets</div><div class="card">
+<div class="symbol">MEVCUT BAKİYE</div><div class="balance" id="assetBalance">0.0000</div><div class="usd-big" id="assetBalanceUsd">$0.000000</div><div class="symbol">RA</div>
+<div class="item"><b>💎 RA Coin</b><p>Mevcut bakiye: <span id="assetCoin">0.0000</span> RA · <span id="assetCoinUsd">$0.000000</span></p></div>
+<div class="item"><b>📊 Toplam Elde Edilen</b><p id="assetTotalEarned">0.0000 RA · <span id="assetTotalEarnedUsd">$0.000000</span></p></div>
+<div class="item"><b>💵 Referans Değeri</b><p>1 RA = $0.00200</p></div>
+<div class="item"><b>📤 Çekim</b><p>Minimum çekim: 5.000 RA</p><button type="button" class="action" onclick="withdraw()">PARA ÇEK</button></div>
+</div></div>
+
+<div id="tasksPage" class="page"><div class="pageTitle">🎁 Tasks</div>
+<div class="item"><b>📱 Telegram'a katıl</b><p>Görevi tamamla ve sanal RA ödülü kazan.</p><button type="button" class="action" onclick="task('Telegram görevi',100)">GÖREVİ TAMAMLA</button></div>
+<div class="item"><b>👥 Arkadaş davet et</b><p>Arkadaşlarını davet ederek ekstra ödüller kazan.</p><button type="button" class="action" onclick="showPage('friends')">DAVET ET</button></div>
+<div class="item"><b>🔥 Günlük giriş</b><p>Her gün uygulamayı ziyaret et.</p><button type="button" class="action" onclick="task('Günlük giriş',250)">ÖDÜLÜ AL</button></div>
+</div>
+
+<div id="friendsPage" class="page"><div class="pageTitle">👥 Friends</div><div class="card center">
+<div style="font-size:50px">👥</div><h2>Arkadaşlarını Davet Et</h2><p class="symbol">Arkadaşlarını davet ederek referans sayını artır.</p>
+<div class="item"><b>Referansların</b><p id="friendCount">0 kişi</p></div>
+<button type="button" class="action" onclick="copyReferral()">🔗 DAVET LİNKİNİ KOPYALA</button>
+<button type="button" class="action dark" onclick="shareReferral()">📤 ARKADAŞLARLA PAYLAŞ</button>
+</div></div>
+
+<div id="profilePage" class="page"><div class="pageTitle">👤 Profile</div><div class="card profile">
+<div class="avatar">👤</div><div class="username" id="username">Telegram Kullanıcısı</div>
+<div class="item"><b>Telegram ID</b><p id="userId">Telegram üzerinden algılanıyor...</p></div>
+<div class="item"><b>RA Bakiye</b><p id="profileBalance">0.0000 RA · <span id="profileBalanceUsd">$0.000000</span></p></div>
+<div class="item"><b>Toplam Elde Edilen</b><p><span style="display:block">Toplanan Adet: <strong id="profileTotal">0.0000 RA</strong></span><span style="display:block;margin-top:6px">$ Karşılığı: <strong id="profileTotalUsd">$0.000000</strong></span></p></div>
+<div class="item"><b>Mining Durumu</b><p class="green">🟢 Aktif</p></div>
+</div><div class="notice">RA Coin Mining, aktif kaldıkça zaman içinde RA Coin biriktirmenizi sağlayan bir mining sistemidir. Görevler ve arkadaş davetleriyle kazancınızı artırabilirsiniz.</div></div>
+</div>
+
+<div id="paymentPage" class="page">
+<div class="pageTitle">💳 Ödeme Sayfası</div>
+<div class="card">
+<div class="box"><small>Seçilen Paket</small><strong id="paymentPackage">RA 10</strong></div>
+<div class="box"><small>Paket Tutarı</small><strong id="paymentAmount">$10</strong></div>
+<div class="symbol" style="margin-top:15px">ÖDEME YÖNTEMİ</div>
+<div class="payMethods">
+<button type="button" class="payMethod" onclick="selectPayment('BTC')">₿<span>BTC</span></button>
+<button type="button" class="payMethod" onclick="selectPayment('ETH')">♦<span>ETH</span></button>
+<button type="button" class="payMethod" onclick="selectPayment('TRX')">◈<span>TRX</span></button>
+<button type="button" class="payMethod" onclick="selectPayment('LTC')">Ł<span>LTC</span></button>
+</div>
+<div id="paymentDetails" class="item" style="display:none">
+<b id="paymentCoin">BTC</b>
+<p><strong>Ağ:</strong> <span id="paymentNetwork">Bitcoin</span></p>
+<p><strong>Ödeme Adresi:</strong></p>
+<div id="paymentAddress" class="paymentAddress">Adres ayarlanmadı</div>
+<div class="estimatedPay" style="margin-top:14px;background:#171c27;border-radius:12px;padding:14px">
+  <div style="font-size:13px;color:#9da5b5;margin-bottom:6px">Tahmini Ödenecek Tutar</div>
+  <div id="paymentCryptoAmount" style="font-size:22px;font-weight:800;color:#fff">-</div>
+  <div style="font-size:12px;color:#9da5b5;margin-top:5px">Kur değiştikçe bu miktar değişebilir.</div>
+</div>
+<button type="button" class="action" onclick="copyPaymentAddress()">📋 ADRESİ KOPYALA</button>
+</div>
+<div class="notice">Seçtiğin coin için ödeme adresini kullanabilir ve adresi tek dokunuşla kopyalayabilirsin.</div>
+<button type="button" class="action dark" onclick="showPage('package')">← PAKETLERE DÖN</button>
+</div>
+</div>
+
+<div class="nav">
+<button type="button" id="navMining" class="active" onclick="showPage('mining')"><span>⛏️</span>Mining</button>
+<button type="button" id="navPackage" onclick="showPage('package')"><span>📦</span>Paket</button>
+<button type="button" id="navAssets" onclick="showPage('assets')"><span>💰</span>Assets</button>
+<button type="button" id="navTasks" onclick="showPage('tasks')"><span>🎁</span>Tasks</button>
+<button type="button" id="navFriends" onclick="showPage('friends')"><span>👥</span>Friends</button>
+<button type="button" id="navProfile" onclick="showPage('profile')"><span>👤</span>Profile</button>
+</div>
+
+<script>
 (function(){
 'use strict';
- 
+
 let tg=null, telegramUser=null;
 try{
  if(window.Telegram && Telegram.WebApp){
@@ -308,10 +176,10 @@ try{
   telegramUser=tg.initDataUnsafe && tg.initDataUnsafe.user ? tg.initDataUnsafe.user : null;
  }
 }catch(e){console.log(e)}
- 
+
 const userKey=telegramUser && telegramUser.id ? 'user_'+telegramUser.id : 'demo';
 const storageKey='ra_coin_data_v4_'+userKey;
- 
+
 let data={
  balance:0,
  totalClaimed:0,
@@ -319,30 +187,34 @@ let data={
  packageName:'Başlangıç',
  miningPerDay:150,
  lastUpdate:Date.now(),
- lastDailyTask:0
+ lastDailyTask:''
 };
- 
+
 function loadData(){
  try{
   const saved=localStorage.getItem(storageKey);
   if(saved){
    const parsed=JSON.parse(saved);
-   if(parsed && typeof parsed==='object') data=Object.assign(data,parsed);
+   if(parsed && typeof parsed==='object'){
+     data=Object.assign(data,parsed);
+     data.balance = Number(data.balance) || 0;
+     data.totalClaimed = Number(data.totalClaimed) || 0;
+   }
   }
  }catch(e){console.log('load',e)}
 }
- 
+
 function saveData(){
  try{data.lastUpdate=Date.now();localStorage.setItem(storageKey,JSON.stringify(data));}
  catch(e){console.log('save',e)}
 }
- 
+
 function addMining(seconds){
  if(!seconds || seconds<=0)return;
  const rate=Number(data.miningPerDay)||150;
- data.balance += rate/86400*seconds;
+ data.balance = Number(data.balance) + (rate/86400)*seconds;
 }
- 
+
 function calculateOfflineMining(){
  const now=Date.now();
  const last=Number(data.lastUpdate)||now;
@@ -353,10 +225,10 @@ function calculateOfflineMining(){
  data.lastUpdate=now;
  saveData();
 }
- 
+
 function fmt(n){return (Number(n)||0).toFixed(4)}
 function usd(n){return '$'+((Number(n)||0)*0.002).toFixed(6)}
- 
+
 window.showPage=function(page){
  const pages=document.querySelectorAll('.page');
  pages.forEach(function(el){el.classList.remove('active')});
@@ -366,18 +238,21 @@ window.showPage=function(page){
  const nav=document.getElementById('nav'+page.charAt(0).toUpperCase()+page.slice(1));
  if(nav)nav.classList.add('active');
  updateScreen();
- 
-  window.scrollTo(0,0);
-  setTimeout(function(){window.scrollTo(0,0)},50);};
- 
+ window.scrollTo(0,0);
+};
+
 function updateScreen(){
  const b=fmt(data.balance), t=fmt(data.totalClaimed);
  const ids={
   balance:b,counter:b,totalEarned:t,assetBalance:b,assetCoin:b,assetTotalEarned:t,
-  profileBalance:b,profileTotal:t,activePackage:data.packageName,
+  profileBalance:b,profileTotal:t,activePackageText:data.packageName,
   refCount:(data.referralCount||0)+' kişi',friendCount:(data.referralCount||0)+' kişi'
  };
- Object.keys(ids).forEach(function(id){const el=document.getElementById(id);if(el)el.innerText=ids[id]});
+ Object.keys(ids).forEach(function(id){
+   const el=document.getElementById(id);
+   if(el) el.innerText=ids[id];
+ });
+ 
  const usdIds={
   balanceUsd:usd(data.balance),
   totalEarnedUsd:usd(data.totalClaimed),
@@ -387,17 +262,22 @@ function updateScreen(){
   profileBalanceUsd:usd(data.balance),
   profileTotalUsd:usd(data.totalClaimed)
  };
- Object.keys(usdIds).forEach(function(id){const el=document.getElementById(id);if(el)el.innerText=usdIds[id]});
+ Object.keys(usdIds).forEach(function(id){
+   const el=document.getElementById(id);
+   if(el) el.innerText=usdIds[id];
+ });
+
  const rate=(Number(data.miningPerDay)||150);
  const speed=document.getElementById('speedText');
  if(speed)speed.innerText=fmt(rate)+' RA / gün';
+ 
  if(telegramUser){
   const name=telegramUser.first_name || (telegramUser.username ? '@'+telegramUser.username : 'Telegram Kullanıcısı');
   const u=document.getElementById('username');if(u)u.innerText=name;
   const id=document.getElementById('userId');if(id)id.innerText=telegramUser.id;
  }
 }
- 
+
 window.claim=function(){
  calculateOfflineMining();
  if(data.balance<=0){alert('Claim edilecek RA bulunmuyor.');return}
@@ -408,7 +288,7 @@ window.claim=function(){
  updateScreen();
  alert(fmt(amount)+' RA claim edildi.');
 };
- 
+
 window.activatePackage=function(name,rate,price){
  if(data.packageName===name){alert('Bu paket zaten aktif.');return}
  const packageCost=Number(price)||0;
@@ -421,18 +301,60 @@ window.activatePackage=function(name,rate,price){
  data.packageName=name;
  data.miningPerDay=Number(rate)||150;
  data.lastUpdate=Date.now();
- saveData();updateScreen();
+ saveData();
+ updateScreen();
  alert(name+' paketi sanal olarak aktif edildi.');
 };
- 
+
 window.withdraw=function(){
  calculateOfflineMining();
  if(data.balance<5000){alert('Minimum çekim miktarı 5.000 RA.');return}
  alert('Çekim talebi demo modunda oluşturuldu.');
 };
- 
+
 window.task=function(name,reward){
  const now=Date.now();
  if(name==='Günlük giriş'){
   const today=new Date().toDateString();
-  if(data.lastDailyTask===today){alert('Bugünkü ödülü zat
+  if(data.lastDailyTask===today){alert('Bugünkü ödülü zaten aldın.');return}
+  data.lastDailyTask=today;
+ }
+ data.balance += Number(reward)||0;
+ saveData();
+ updateScreen();
+ alert(name+' tamamlandı. +'+fmt(reward)+' RA');
+};
+
+function getBotUsername(){return 'raMiningBot'}
+function getReferralLink(){
+ const id=telegramUser && telegramUser.id ? telegramUser.id : 'demo';
+ return 'https://t.me/'+getBotUsername()+'?start=ref_'+id;
+}
+
+window.copyReferral=function(){
+ const link=getReferralLink();
+ if(navigator.clipboard && window.isSecureContext){
+  navigator.clipboard.writeText(link).then(function(){alert('Davet linki kopyalandı.\n\n'+link)}).catch(function(){alert(link)});
+ }else{alert(link)}
+};
+
+window.shareReferral=function(){
+ const link=getReferralLink();
+ const text='RA Coin\'e katıl! 🪙';
+ const share='https://t.me/share/url?url='+encodeURIComponent(link)+'&text='+encodeURIComponent(text);
+ if(tg && tg.openTelegramLink){tg.openTelegramLink(share)}else{window.open(share,'_blank')}
+};
+
+loadData();
+calculateOfflineMining();
+updateScreen();
+
+// Sayaç döngüsü
+setInterval(function(){
+ addMining(1);
+ saveData();
+ updateScreen();
+},1000);
+
+window.addEventListener('beforeunload',saveData);
+document.addEventListener('visibilitychange',function(){if(!docum
