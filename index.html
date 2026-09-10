@@ -253,7 +253,7 @@ body{
 
 <div class="box">
 <small>Mining Hızı</small>
-<strong id="speedText">0.00625 RA/sn</strong>
+<strong id="speedText">0.001736 RA/sn</strong>
 </div>
 
 <div class="box">
@@ -321,7 +321,7 @@ body{
 <b>📱 Telegram'a katıl</b>
 <p>Görevi tamamla ve sanal RA ödülü kazan.</p>
 <button class="action" onclick="task('Telegram görevi')">
-    GÖREVI TAMAMLA
+GÖREVİ TAMAMLA
 </button>
 </div>
 
@@ -329,7 +329,7 @@ body{
 <b>👥 Arkadaş davet et</b>
 <p>Arkadaşlarını davet ederek ekstra ödüller kazan.</p>
 <button class="action" onclick="showPage('friends')">
-    DAVET ET
+DAVET ET
 </button>
 </div>
 
@@ -337,7 +337,7 @@ body{
 <b>🔥 Günlük giriş</b>
 <p>Her gün uygulamayı ziyaret et.</p>
 <button class="action" onclick="task('Günlük giriş')">
-    ÖDÜLÜ AL
+ÖDÜLÜ AL
 </button>
 </div>
 
@@ -366,7 +366,7 @@ Her davet edilen kullanıcı referans sistemine eklenir.
 </div>
 
 <button class="action" onclick="copyReferral()">
-    🔗 DAVET LİNKİNİ KOPYALA
+🔗 DAVET LİNKİNİ KOPYALA
 </button>
 
 </div>
@@ -448,40 +448,167 @@ Profile
 
 <script>
 
+/* =========================================
+   RA COIN KALICI MADENCİLİK SİSTEMİ
+   ========================================= */
+
+const STORAGE_KEY = "ra_coin_mining_data_v1";
+
+/* 150 RA / 24 saat */
+const miningPerSecond = 150 / 86400;
+
 let balance = 0;
 let total = 0;
+let lastUpdate = Date.now();
 
-const miningPerSecond = 150 / 86400;
+
+/* KAYITLI VERİYİ YÜKLE */
+
+function loadData(){
+
+    try{
+
+        const saved =
+            localStorage.getItem(STORAGE_KEY);
+
+        if(saved){
+
+            const data = JSON.parse(saved);
+
+            balance =
+                Number(data.balance) || 0;
+
+            total =
+                Number(data.total) || 0;
+
+            lastUpdate =
+                Number(data.lastUpdate) || Date.now();
+
+        }else{
+
+            balance = 0;
+            total = 0;
+            lastUpdate = Date.now();
+
+            saveData();
+        }
+
+    }catch(error){
+
+        console.log("Kayıt yükleme hatası:", error);
+
+        balance = 0;
+        total = 0;
+        lastUpdate = Date.now();
+    }
+}
+
+
+/* VERİYİ KAYDET */
+
+function saveData(){
+
+    const data = {
+
+        balance: balance,
+
+        total: total,
+
+        lastUpdate: lastUpdate
+    };
+
+    localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify(data)
+    );
+}
+
+
+/* UYGULAMA KAPALIYKEN KAZILAN RA */
+
+function calculateOfflineMining(){
+
+    const now = Date.now();
+
+    let elapsed =
+        (now - lastUpdate) / 1000;
+
+    if(elapsed < 0){
+        elapsed = 0;
+    }
+
+    /*
+      Güvenlik için aşırı büyük zaman farklarında
+      hesaplama yine normal şekilde devam eder.
+    */
+
+    const earned =
+        elapsed * miningPerSecond;
+
+    balance += earned;
+    total += earned;
+
+    lastUpdate = now;
+
+    saveData();
+}
 
 
 /* SAYFA DEĞİŞTİR */
 
 function showPage(page){
 
-    document.querySelectorAll(".page").forEach(function(el){
-        el.classList.remove("active");
-    });
+    document.querySelectorAll(".page")
+        .forEach(function(el){
 
-    document.getElementById(page + "Page").classList.add("active");
+            el.classList.remove("active");
 
-    document.querySelectorAll(".nav button").forEach(function(el){
-        el.classList.remove("active");
-    });
+        });
 
-    document.getElementById("nav" + 
-        page.charAt(0).toUpperCase() + page.slice(1)
-    ).classList.add("active");
+    const selected =
+        document.getElementById(page + "Page");
+
+    if(selected){
+
+        selected.classList.add("active");
+    }
+
+
+    document.querySelectorAll(".nav button")
+        .forEach(function(el){
+
+            el.classList.remove("active");
+
+        });
+
+
+    const navButton =
+        document.getElementById(
+            "nav" +
+            page.charAt(0).toUpperCase() +
+            page.slice(1)
+        );
+
+    if(navButton){
+
+        navButton.classList.add("active");
+    }
 
     updateScreen();
 }
 
 
-/* MINING */
+/* MADENCİLİK */
 
 function mine(){
 
     balance += miningPerSecond;
+
     total += miningPerSecond;
+
+    lastUpdate = Date.now();
+
+    saveData();
 
     updateScreen();
 }
@@ -491,23 +618,30 @@ function mine(){
 
 function updateScreen(){
 
-    document.getElementById("balance").innerText =
+    const balanceText =
         balance.toFixed(4);
 
-    document.getElementById("counter").innerText =
-        balance.toFixed(4);
-
-    document.getElementById("total").innerText =
+    const totalText =
         total.toFixed(4) + " RA";
 
-    document.getElementById("assetBalance").innerText =
-        balance.toFixed(4);
 
-    document.getElementById("assetCoin").innerText =
-        balance.toFixed(4);
+    document.getElementById("balance")
+        .innerText = balanceText;
 
-    document.getElementById("profileBalance").innerText =
-        balance.toFixed(4) + " RA";
+    document.getElementById("counter")
+        .innerText = balanceText;
+
+    document.getElementById("total")
+        .innerText = totalText;
+
+    document.getElementById("assetBalance")
+        .innerText = balanceText;
+
+    document.getElementById("assetCoin")
+        .innerText = balanceText;
+
+    document.getElementById("profileBalance")
+        .innerText = balanceText + " RA";
 }
 
 
@@ -517,17 +651,29 @@ function claim(){
 
     if(balance <= 0){
 
-        alert("Claim edilecek RA bulunmuyor.");
+        alert(
+            "Claim edilecek RA bulunmuyor."
+        );
 
         return;
     }
 
+
+    const claimed =
+        balance.toFixed(4);
+
+
     alert(
-        balance.toFixed(4) +
+        claimed +
         " RA claim edildi."
     );
 
+
     balance = 0;
+
+    lastUpdate = Date.now();
+
+    saveData();
 
     updateScreen();
 }
@@ -545,6 +691,7 @@ function withdraw(){
 
         return;
     }
+
 
     alert(
         "Çekim talebi demo modunda oluşturuldu."
@@ -567,29 +714,42 @@ function task(name){
 
 function copyReferral(){
 
-    const tg = window.Telegram &&
-               Telegram.WebApp;
+    const tg =
+        window.Telegram &&
+        Telegram.WebApp;
 
-    let username = "raMiningBot";
+    /*
+      Şimdilik demo bot kullanıcı adı.
+      Gerçek referral sistemi backend'e bağlanınca
+      kullanıcı bazlı referral kodu oluşturacağız.
+    */
 
-    if(tg && tg.initDataUnsafe &&
-       tg.initDataUnsafe.user){
+    const username =
+        "raMiningBot";
 
-        username =
-            tg.initDataUnsafe.user.username ||
-            "raMiningBot";
-    }
 
     const link =
         "https://t.me/" +
         username +
         "?start=ref";
 
+
     if(navigator.clipboard){
 
-        navigator.clipboard.writeText(link);
+        navigator.clipboard
+            .writeText(link)
+            .then(function(){
 
-        alert("Davet linki kopyalandı.");
+                alert(
+                    "Davet linki kopyalandı."
+                );
+
+            })
+            .catch(function(){
+
+                alert(link);
+
+            });
 
     }else{
 
@@ -600,32 +760,97 @@ function copyReferral(){
 
 /* TELEGRAM KULLANICI */
 
-if(window.Telegram && Telegram.WebApp){
+function loadTelegramUser(){
 
-    Telegram.WebApp.ready();
-    Telegram.WebApp.expand();
+    if(
+        window.Telegram &&
+        Telegram.WebApp
+    ){
 
-    const user =
-        Telegram.WebApp.initDataUnsafe.user;
+        Telegram.WebApp.ready();
 
-    if(user){
+        Telegram.WebApp.expand();
 
-        document.getElementById("username").innerText =
-            user.first_name ||
-            user.username ||
-            "Telegram Kullanıcısı";
 
-        document.getElementById("userId").innerText =
-            user.id;
+        const user =
+            Telegram.WebApp
+            .initDataUnsafe
+            .user;
+
+
+        if(user){
+
+            document.getElementById("username")
+                .innerText =
+                user.first_name ||
+                user.username ||
+                "Telegram Kullanıcısı";
+
+
+            document.getElementById("userId")
+                .innerText =
+                user.id;
+        }
     }
 }
 
 
-/* MADENCİLİK */
+/* SAYFA KAPANMADAN ÖNCE KAYDET */
 
-setInterval(mine,1000);
+window.addEventListener(
+    "beforeunload",
+    function(){
+
+        lastUpdate = Date.now();
+
+        saveData();
+
+    }
+);
+
+
+/* TELEGRAM MINI APP GİZLENDİĞİNDE */
+
+document.addEventListener(
+    "visibilitychange",
+    function(){
+
+        if(
+            document.visibilityState ===
+            "visible"
+        ){
+
+            calculateOfflineMining();
+
+            updateScreen();
+
+        }else{
+
+            lastUpdate = Date.now();
+
+            saveData();
+        }
+    }
+);
+
+
+/* BAŞLANGIÇ */
+
+loadData();
+
+calculateOfflineMining();
+
+loadTelegramUser();
 
 updateScreen();
+
+
+/* HER SANİYE MADENCİLİK */
+
+setInterval(
+    mine,
+    1000
+);
 
 </script>
 
