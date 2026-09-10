@@ -1,1285 +1,411 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="tr">
-<head>
-
-<meta charset="UTF-8">
-
-<meta
-name="viewport"
-content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
->
-
-<title>RA Coin</title>
-
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
-
-<style>
-
-*{
-    box-sizing:border-box;
-    -webkit-tap-highlight-color:transparent;
-}
-
-html,body{
-    margin:0;
-    padding:0;
-    background:#090b12;
-    color:#fff;
-    font-family:Arial,sans-serif;
-    min-height:100%;
-}
-
-body{
-    overflow-x:hidden;
-}
-
-button{
-    font-family:Arial,sans-serif;
-    cursor:pointer;
-}
-
-.app{
-    width:100%;
-    max-width:480px;
-    min-height:100vh;
-    margin:auto;
-    padding:20px 16px 110px;
-}
-
-/* HEADER */
-
-.header{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:20px;
-}
-
-.logo{
-    font-size:25px;
-    font-weight:bold;
-}
-
-.status{
-    background:#151923;
-    color:#65e38a;
-    padding:8px 12px;
-    border-radius:20px;
-    font-size:12px;
-}
-
-/* PAGES */
-
-.page{
-    display:none;
-}
-
-.page.active{
-    display:block;
-}
-
-/* TITLE */
-
-.pageTitle{
-    font-size:28px;
-    font-weight:bold;
-    margin:8px 0 18px;
-}
-
-/* CARD */
-
-.card{
-    background:#121620;
-    border:1px solid #202633;
-    border-radius:24px;
-    padding:20px;
-    margin-top:15px;
-}
-
-.center{
-    text-align:center;
-}
-
-/* BALANCE */
-
-.symbol{
-    color:#929aaa;
-    font-size:15px;
-}
-
-.balance{
-    font-size:42px;
-    font-weight:bold;
-    margin:9px 0;
-}
-
-/* MINING CIRCLE */
-
-.mining{
-    width:215px;
-    height:215px;
-    margin:28px auto;
-    border-radius:50%;
-    border:8px solid #252c3b;
-
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
-
-    box-shadow:
-    0 0 35px rgba(80,130,255,.12);
-}
-
-.coin{
-    font-size:48px;
-}
-
-.counter{
-    font-size:24px;
-    font-weight:bold;
-    margin-top:3px;
-}
-
-.miningText{
-    color:#929aaa;
-    margin-top:6px;
-    font-size:17px;
-}
-
-/* BUTTON */
-
-.claim,
-.action{
-    width:100%;
-    border:0;
-    border-radius:15px;
-    padding:16px;
-    font-size:16px;
-    font-weight:bold;
-}
-
-.claim{
-    background:#fff;
-    color:#090b12;
-}
-
-.action{
-    background:#fff;
-    color:#090b12;
-    margin-top:12px;
-}
-
-.action.dark{
-    background:#202633;
-    color:#fff;
-}
-
-.action:active,
-.claim:active{
-    transform:scale(.98);
-}
-
-/* GRID */
-
-.grid{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:12px;
-    margin-top:16px;
-}
-
-.box{
-    background:#171c27;
-    border-radius:17px;
-    padding:17px;
-    min-height:82px;
-}
-
-.box small{
-    color:#929aaa;
-    font-size:14px;
-}
-
-.box strong{
-    display:block;
-    margin-top:8px;
-    font-size:18px;
-}
-
-/* ITEMS */
-
-.item{
-    background:#171c27;
-    border-radius:17px;
-    padding:17px;
-    margin-top:12px;
-}
-
-.item b{
-    font-size:17px;
-}
-
-.item p{
-    color:#9aa2b3;
-    margin:8px 0 0;
-    font-size:14px;
-    line-height:1.4;
-}
-
-/* PACKAGE */
-
-.package{
-    background:#171c27;
-    border:1px solid #252c3b;
-    border-radius:18px;
-    padding:18px;
-    margin-top:13px;
-}
-
-.packageTop{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-}
-
-.packageName{
-    font-size:19px;
-    font-weight:bold;
-}
-
-.packagePrice{
-    font-size:18px;
-    font-weight:bold;
-}
-
-.packageRate{
-    color:#9aa2b3;
-    margin-top:9px;
-}
-
-.package.activePackage{
-    border:1px solid #62d88b;
-}
-
-/* PROFILE */
-
-.profile{
-    text-align:center;
-}
-
-.avatar{
-    font-size:60px;
-}
-
-.username{
-    font-size:22px;
-    font-weight:bold;
-    margin-top:8px;
-}
-
-.notice{
-    background:#171c27;
-    border-radius:15px;
-    padding:15px;
-    color:#aeb5c4;
-    font-size:13px;
-    line-height:1.5;
-    margin-top:15px;
-}
-
-/* NAV */
-
-.nav{
-    position:fixed;
-    left:0;
-    right:0;
-    bottom:0;
-
-    width:100%;
-    max-width:480px;
-    margin:auto;
-
-    background:#11151e;
-    border-top:1px solid #252b38;
-
-    display:grid;
-    grid-template-columns:repeat(6,1fr);
-
-    padding:9px 3px;
-
-    z-index:9999;
-}
-
-.nav button{
-    background:none;
-    border:0;
-    color:#7f8798;
-    font-size:10px;
-    padding:3px 0;
-}
-
-.nav button.active{
-    color:#fff;
-}
-
-.nav span{
-    display:block;
-    font-size:21px;
-    margin-bottom:3px;
-}
-
-/* SMALL */
-
-.green{
-    color:#62d88b;
-}
-
-.red{
-    color:#ff6b6b;
-}
-
-.yellow{
-    color:#ffd166;
-}
-
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>RA Coin</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0;background:#090b12;color:#fff;font-family:Arial,sans-serif;min-height:100%;overflow-x:hidden}
+button{font-family:Arial,sans-serif;cursor:pointer}
+.app{width:100%;max-width:480px;min-height:100vh;margin:auto;padding:20px 16px 110px}
+.header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}.logo{font-size:25px;font-weight:bold}.status{background:#151923;color:#65e38a;padding:8px 12px;border-radius:20px;font-size:12px}
+.page{display:none}.page.active{display:block}.pageTitle{font-size:28px;font-weight:bold;margin:8px 0 18px}
+.card{background:#121620;border:1px solid #202633;border-radius:24px;padding:20px;margin-top:15px}.center{text-align:center}.symbol{color:#929aaa;font-size:15px}.balance{font-size:42px;font-weight:bold;margin:9px 0}
+.mining{width:215px;height:215px;margin:28px auto;border-radius:50%;border:8px solid #252c3b;display:flex;flex-direction:column;justify-content:center;align-items:center;box-shadow:0 0 35px rgba(80,130,255,.12)}
+.coin{font-size:48px}.counter{font-size:24px;font-weight:bold;margin-top:3px}.miningText{color:#929aaa;margin-top:6px;font-size:17px}
+.claim,.action{width:100%;border:0;border-radius:15px;padding:16px;font-size:16px;font-weight:bold}.claim{background:#fff;color:#090b12}.action{background:#fff;color:#090b12;margin-top:12px}.action.dark{background:#202633;color:#fff}.action:active,.claim:active{transform:scale(.98)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}.box{background:#171c27;border-radius:17px;padding:17px;min-height:82px}.box small{color:#929aaa;font-size:14px}.box strong{display:block;margin-top:8px;font-size:18px}
+.item{background:#171c27;border-radius:17px;padding:17px;margin-top:12px}.item b{font-size:17px}.item p{color:#9aa2b3;margin:8px 0 0;font-size:14px;line-height:1.4}
+.package{background:#171c27;border:1px solid #252c3b;border-radius:18px;padding:18px;margin-top:13px}.package.activePackage{border:1px solid #62d88b}.packageTop{display:flex;justify-content:space-between;align-items:center;gap:10px}.packageName{font-size:19px;font-weight:bold}.packagePrice{font-size:17px;font-weight:bold}.packageRate{color:#9aa2b3;margin-top:9px}.package button{margin-top:12px}
+.profile{text-align:center}.avatar{font-size:60px}.username{font-size:22px;font-weight:bold;margin-top:8px}.notice{background:#171c27;border-radius:15px;padding:15px;color:#aeb5c4;font-size:13px;line-height:1.5;margin-top:15px}
+.nav{position:fixed;left:0;right:0;bottom:0;width:100%;max-width:480px;margin:auto;background:#11151e;border-top:1px solid #252b38;display:grid;grid-template-columns:repeat(6,1fr);padding:9px 3px;z-index:9999}.nav button{background:none;border:0;color:#7f8798;font-size:10px;padding:3px 0}.nav button.active{color:#fff}.nav span{display:block;font-size:21px;margin-bottom:3px}
+.green{color:#62d88b}.yellow{color:#ffd166}.usd-big{color:#9aa2b3;font-size:15px;margin-top:-4px}.usd-inline{color:#9aa2b3;font-size:12px;font-weight:normal;margin-left:4px}
 </style>
-
-</head>
-
-<body>
-
-<div class="app">
-
-<!-- HEADER -->
-
-<div class="header">
-
-    <div class="logo">
-        🪙 RA Coin
-    </div>
-
-    <div class="status">
-        ● Mining
-    </div>
-
-</div>
-
-
-<!-- ===================================================== -->
-<!-- MINING -->
-<!-- ===================================================== -->
-
-<div id="miningPage" class="page active">
-
+ </head>
+ <body>
+  <div class="app">
+   <div class="header">
+    <div class="logo">🪙 RA Coin</div>
+    <div class="status">● Mining</div>
+   </div>
+   <div id="miningPage" class="page active">
     <div class="card center">
-
-        <div class="symbol">
-            RA COIN BAKİYESİ
-        </div>
-
-        <div
-        class="balance"
-        id="balance">
-        0.0000
-        </div>
-
-        <div class="symbol">
-            RA
-        </div>
-
-
-        <div class="mining">
-
-            <div class="coin">
-                🪙
-            </div>
-
-            <div
-            class="counter"
-            id="counter">
-            0.0000
-            </div>
-
-            <div class="miningText">
-                Mining aktif
-            </div>
-
-        </div>
-
-
-        <button
-        class="claim"
-        onclick="claim()">
-            CLAIM
-        </button>
-
+     <div class="symbol">RA COIN BAKİYESİ</div>
+     <div class="balance" id="balance">0.0000</div>
+     <div class="usd-big" id="balanceUsd">$0.000000</div>
+     <div class="symbol">RA</div>
+     <div class="mining">
+      <div class="coin">🪙</div>
+      <div class="counter" id="counter">0.0000</div>
+      <div class="miningText">Mining aktif</div>
+     </div>
+     <button type="button" class="claim" onclick="claim()">CLAIM</button>
     </div>
-
-
     <div class="grid">
-
-        <div class="box">
-
-            <small>
-                Mining Hızı
-            </small>
-
-            <strong id="speedText">
-                150 RA / gün
-            </strong>
-
-        </div>
-
-
-        <div class="box">
-
-            <small>
-                Toplam Elde Edilen
-            </small>
-
-            <strong id="totalEarned">
-                0.0000 RA
-            </strong>
-
-        </div>
-
-
-        <div class="box">
-
-            <small>
-                Aktif Paket
-            </small>
-
-            <strong id="activePackage">
-                Başlangıç
-            </strong>
-
-        </div>
-
-
-        <div class="box">
-
-            <small>
-                Referans
-            </small>
-
-            <strong id="refCount">
-                0 kişi
-            </strong>
-
-        </div>
-
+     <div class="box">
+      <small>Mining Hızı</small><strong id="speedText">150 RA / gün</strong>
+     </div>
+     <div class="box">
+      <small>Toplam Elde Edilen</small><strong id="totalEarned">0.0000 RA <span class="usd-inline" id="totalEarnedUsd">$0.000000</span></strong>
+     </div>
+     <div class="box">
+      <small>Aktif Paket</small><strong id="activePackage">Başlangıç</strong>
+     </div>
+     <div class="box">
+      <small>Referans</small><strong id="refCount">0 kişi</strong>
+     </div>
     </div>
-
-</div>
-
-
-<!-- ===================================================== -->
-<!-- PACKAGE -->
-<!-- ===================================================== -->
-
-<div id="packagePage" class="page">
-
-    <div class="pageTitle">
-        📦 Paketler
-    </div>
-
-
+   </div>
+   <div id="packagePage" class="page">
+    <div class="pageTitle">📦 Paketler</div>
     <div class="card">
-
-        <div class="symbol">
-            MADENCİLİK PAKETLERİ
-        </div>
-
-        <p class="notice">
-            Paketler şu anda sanal/demo sistemidir.
-            Gerçek para ödemesi yapılmaz.
-        </p>
-
-
-        <!-- START -->
-
-        <div
-        class="package activePackage">
-
-            <div class="packageTop">
-
-                <div class="packageName">
-                    🟢 Başlangıç
-                </div>
-
-                <div class="packagePrice">
-                    ÜCRETSİZ
-                </div>
-
-            </div>
-
-            <div class="packageRate">
-                150 RA / gün
-            </div>
-
-            <button
-            class="action"
-            onclick="activatePackage('Başlangıç',150)">
-                AKTİF
-            </button>
-
-        </div>
-
-
-        <!-- 10 -->
-
-        <div class="package">
-
-            <div class="packageTop">
-
-                <div class="packageName">
-                    💎 RA 10
-                </div>
-
-                <div class="packagePrice">
-                    $10 Demo
-                </div>
-
-            </div>
-
-            <div class="packageRate">
-                5.000 RA / 24 saat
-            </div>
-
-            <button
-            class="action"
-            onclick="activatePackage('RA 10',5000)">
-                AKTİFLEŞTİR
-            </button>
-
-        </div>
-
-
-        <!-- 20 -->
-
-        <div class="package">
-
-            <div class="packageTop">
-
-                <div class="packageName">
-                    💎 RA 20
-                </div>
-
-                <div class="packagePrice">
-                    $20 Demo
-                </div>
-
-            </div>
-
-            <div class="packageRate">
-                10.000 RA / 24 saat
-            </div>
-
-            <button
-            class="action"
-            onclick="activatePackage('RA 20',10000)">
-                AKTİFLEŞTİR
-            </button>
-
-        </div>
-
-
-        <!-- 30 -->
-
-        <div class="package">
-
-            <div class="packageTop">
-
-                <div class="packageName">
-                    💎 RA 30
-                </div>
-
-                <div class="packagePrice">
-                    $30 Demo
-                </div>
-
-            </div>
-
-            <div class="packageRate">
-                15.000 RA / 24 saat
-            </div>
-
-            <button
-            class="action"
-            onclick="activatePackage('RA 30',15000)">
-                AKTİFLEŞTİR
-            </button>
-
-        </div>
-
-
-        <!-- 50 -->
-
-        <div class="package">
-
-            <div class="packageTop">
-
-                <div class="packageName">
-                    🚀 RA 50
-                </div>
-
-                <div class="packagePrice">
-                    $50 Demo
-                </div>
-
-            </div>
-
-            <div class="packageRate">
-                25.000 RA / 24 saat
-            </div>
-
-            <button
-            class="action"
-            onclick="activatePackage('RA 50',25000)">
-                AKTİFLEŞTİR
-            </button>
-
-        </div>
-
-
-        <!-- 100 -->
-
-        <div class="package">
-
-            <div class="packageTop">
-
-                <div class="packageName">
-                    🚀 RA 100
-                </div>
-
-                <div class="packagePrice">
-                    $100 Demo
-                </div>
-
-            </div>
-
-            <div class="packageRate">
-                50.000 RA / 24 saat
-            </div>
-
-            <button
-            class="action"
-            onclick="activatePackage('RA 100',50000)">
-                AKTİFLEŞTİR
-            </button>
-
-        </div>
-
-
-        <!-- 200 -->
-
-        <div class="package">
-
-            <div class="packageTop">
-
-                <div class="packageName">
-                    🔥 RA 200
-                </div>
-
-                <div class="packagePrice">
-                    $200 Demo
-                </div>
-
-            </div>
-
-            <div class="packageRate">
-                100.000 RA / 24 saat
-            </div>
-
-            <button
-            class="action"
-            onclick="activatePackage('RA 200',100000)">
-                AKTİFLEŞTİR
-            </button>
-
-        </div>
-
-
-        <!-- 500 -->
-
-        <div class="package">
-
-            <div class="packageTop">
-
-                <div class="packageName">
-                    🔥 RA 500
-                </div>
-
-                <div class="packagePrice">
-                    $500 Demo
-                </div>
-
-            </div>
-
-            <div class="packageRate">
-                250.000 RA / 24 saat
-            </div>
-
-            <button
-            class="action"
-            onclick="activatePackage('RA 500',250000)">
-                AKTİFLEŞTİR
-            </button>
-
-        </div>
-
-
-        <!-- 1000 -->
-
-        <div class="package">
-
-            <div class="packageTop">
-
-                <div class="packageName">
-                    👑 RA 1000
-                </div>
-
-                <div class="packagePrice">
-                    $1000 Demo
-                </div>
-
-            </div>
-
-            <div class="packageRate">
-                500.000 RA / 24 saat
-            </div>
-
-            <button
-            class="action"
-            onclick="activatePackage('RA 1000',500000)">
-                AKTİFLEŞTİR
-            </button>
-
-        </div>
-
+     <div class="symbol">MADENCİLİK PAKETLERİ</div>
+     <div class="notice">Paketler şu anda sanal/demo sistemidir. Gerçek para ödemesi yapılmaz.</div>
+     <div class="package activePackage">
+      <div class="packageTop">
+       <div class="packageName">🟢 Başlangıç</div>
+       <div class="packagePrice">ÜCRETSİZ</div>
+      </div>
+      <div class="packageRate">150 RA / gün</div>
+      <button type="button" class="action" onclick="activatePackage('Başlangıç',150,0)">AKTİF ET</button>
+     </div>
+     <div class="package">
+      <div class="packageTop">
+       <div class="packageName">💎 RA 10</div>
+       <div class="packagePrice">$10 Cash</div>
+      </div>
+      <div class="packageRate">5.000 RA / 24 saat</div>
+      <button type="button" class="action" onclick="activatePackage('RA 10',5000,5000)">AKTİFLEŞTİR</button>
+     </div>
+     <div class="package">
+      <div class="packageTop">
+       <div class="packageName">💎 RA 20</div>
+       <div class="packagePrice">$20 Cash</div>
+      </div>
+      <div class="packageRate">10.000 RA / 24 saat</div>
+      <button type="button" class="action" onclick="activatePackage('RA 20',10000,10000)">AKTİFLEŞTİR</button>
+     </div>
+     <div class="package">
+      <div class="packageTop">
+       <div class="packageName">💎 RA 30</div>
+       <div class="packagePrice">$30 Cash</div>
+      </div>
+      <div class="packageRate">15.000 RA / 24 saat</div>
+      <button type="button" class="action" onclick="activatePackage('RA 30',15000,15000)">AKTİFLEŞTİR</button>
+     </div>
+     <div class="package">
+      <div class="packageTop">
+       <div class="packageName">🚀 RA 50</div>
+       <div class="packagePrice">$50 Cash</div>
+      </div>
+      <div class="packageRate">25.000 RA / 24 saat</div>
+      <button type="button" class="action" onclick="activatePackage('RA 50',25000,25000)">AKTİFLEŞTİR</button>
+     </div>
+     <div class="package">
+      <div class="packageTop">
+       <div class="packageName">🚀 RA 100</div>
+       <div class="packagePrice">$100 Cash</div>
+      </div>
+      <div class="packageRate">50.000 RA / 24 saat</div>
+      <button type="button" class="action" onclick="activatePackage('RA 100',50000,50000)">AKTİFLEŞTİR</button>
+     </div>
+     <div class="package">
+      <div class="packageTop">
+       <div class="packageName">🔥 RA 200</div>
+       <div class="packagePrice">$200 Cash</div>
+      </div>
+      <div class="packageRate">100.000 RA / 24 saat</div>
+      <button type="button" class="action" onclick="activatePackage('RA 200',100000,100000)">AKTİFLEŞTİR</button>
+     </div>
+     <div class="package">
+      <div class="packageTop">
+       <div class="packageName">🔥 RA 500</div>
+       <div class="packagePrice">$500 Cash</div>
+      </div>
+      <div class="packageRate">250.000 RA / 24 saat</div>
+      <button type="button" class="action" onclick="activatePackage('RA 500',250000,250000)">AKTİFLEŞTİR</button>
+     </div>
+     <div class="package">
+      <div class="packageTop">
+       <div class="packageName">👑 RA 1000</div>
+       <div class="packagePrice">$1000 Cash</div>
+      </div>
+      <div class="packageRate">500.000 RA / 24 saat</div>
+      <button type="button" class="action" onclick="activatePackage('RA 1000',500000,500000)">AKTİFLEŞTİR</button>
+     </div>
     </div>
-
-</div>
-
-
-<!-- ===================================================== -->
-<!-- ASSETS -->
-<!-- ===================================================== -->
-
-<div id="assetsPage" class="page">
-
-    <div class="pageTitle">
-        💰 Assets
-    </div>
-
-
+   </div>
+   <div id="assetsPage" class="page">
+    <div class="pageTitle">💰 Assets</div>
     <div class="card">
-
-        <div class="symbol">
-            MEVCUT BAKİYE
-        </div>
-
-        <div
-        class="balance"
-        id="assetBalance">
-        0.0000
-        </div>
-
-        <div class="symbol">
-            RA
-        </div>
-
-
-        <div class="item">
-
-            <b>
-                💎 RA Coin
-            </b>
-
-            <p>
-                Mevcut bakiye:
-                <span id="assetCoin">
-                    0.0000
-                </span>
-                RA
-            </p>
-
-        </div>
-
-
-        <div class="item">
-
-            <b>
-                📊 Toplam Elde Edilen
-            </b>
-
-            <p id="assetTotalEarned">
-                0.0000 RA
-            </p>
-
-        </div>
-
-
-        <div class="item">
-
-            <b>
-                💵 Referans Değeri
-            </b>
-
-            <p>
-                1 RA = $0.00200
-            </p>
-
-        </div>
-
-
-        <div class="item">
-
-            <b>
-                📤 Çekim
-            </b>
-
-            <p>
-                Minimum çekim: 5.000 RA
-            </p>
-
-            <button
-            class="action"
-            onclick="withdraw()">
-                PARA ÇEK
-            </button>
-
-        </div>
-
+     <div class="symbol">MEVCUT BAKİYE</div>
+     <div class="balance" id="assetBalance">0.0000</div>
+     <div class="usd-big" id="assetBalanceUsd">$0.000000</div>
+     <div class="symbol">RA</div>
+     <div class="item">
+      <b>💎 RA Coin</b>
+      <p>Mevcut bakiye: <span id="assetCoin">0.0000</span> RA · <span id="assetCoinUsd">$0.000000</span></p>
+     </div>
+     <div class="item">
+      <b>📊 Toplam Elde Edilen</b>
+      <p id="assetTotalEarned">0.0000 RA · <span id="assetTotalEarnedUsd">$0.000000</span></p>
+     </div>
+     <div class="item">
+      <b>💵 Referans Değeri</b>
+      <p>1 RA = $0.00200</p>
+     </div>
+     <div class="item">
+      <b>📤 Çekim</b>
+      <p>Minimum çekim: 5.000 RA</p>
+      <button type="button" class="action" onclick="withdraw()">PARA ÇEK</button>
+     </div>
     </div>
-
-</div>
-
-
-<!-- ===================================================== -->
-<!-- TASKS -->
-<!-- ===================================================== -->
-
-<div id="tasksPage" class="page">
-
-    <div class="pageTitle">
-        🎁 Tasks
-    </div>
-
-
+   </div>
+   <div id="tasksPage" class="page">
+    <div class="pageTitle">🎁 Tasks</div>
     <div class="item">
-
-        <b>
-            📱 Telegram'a katıl
-        </b>
-
-        <p>
-            Görevi tamamla ve sanal RA ödülü kazan.
-        </p>
-
-        <button
-        class="action"
-        onclick="task('Telegram görevi')">
-            GÖREVİ TAMAMLA
-        </button>
-
+     <b>📱 Telegram'a katıl</b>
+     <p>Görevi tamamla ve sanal RA ödülü kazan.</p>
+     <button type="button" class="action" onclick="task('Telegram görevi',100)">GÖREVİ TAMAMLA</button>
     </div>
-
-
     <div class="item">
-
-        <b>
-            👥 Arkadaş davet et
-        </b>
-
-        <p>
-            Arkadaşlarını davet ederek ekstra ödüller kazan.
-        </p>
-
-        <button
-        class="action"
-        onclick="showPage('friends')">
-            DAVET ET
-        </button>
-
+     <b>👥 Arkadaş davet et</b>
+     <p>Arkadaşlarını davet ederek ekstra ödüller kazan.</p>
+     <button type="button" class="action" onclick="showPage('friends')">DAVET ET</button>
     </div>
-
-
     <div class="item">
-
-        <b>
-            🔥 Günlük giriş
-        </b>
-
-        <p>
-            Her gün uygulamayı ziyaret et.
-        </p>
-
-        <button
-        class="action"
-        onclick="task('Günlük giriş')">
-            ÖDÜLÜ AL
-        </button>
-
+     <b>🔥 Günlük giriş</b>
+     <p>Her gün uygulamayı ziyaret et.</p>
+     <button type="button" class="action" onclick="task('Günlük giriş',250)">ÖDÜLÜ AL</button>
     </div>
-
-</div>
-
-
-<!-- ===================================================== -->
-<!-- FRIENDS -->
-<!-- ===================================================== -->
-
-<div id="friendsPage" class="page">
-
-    <div class="pageTitle">
-        👥 Friends
-    </div>
-
-
+   </div>
+   <div id="friendsPage" class="page">
+    <div class="pageTitle">👥 Friends</div>
     <div class="card center">
-
-        <div style="font-size:50px">
-            👥
-        </div>
-
-        <h2>
-            Arkadaşlarını Davet Et
-        </h2>
-
-        <p class="symbol">
-            Arkadaşlarını davet ederek referans sayını artır.
-        </p>
-
-
-        <div class="item">
-
-            <b>
-                Referansların
-            </b>
-
-            <p id="friendCount">
-                0 kişi
-            </p>
-
-        </div>
-
-
-        <button
-        class="action"
-        onclick="copyReferral()">
-            🔗 DAVET LİNKİNİ KOPYALA
-        </button>
-
-
-        <button
-        class="action dark"
-        onclick="shareReferral()">
-            📤 ARKADAŞLARLA PAYLAŞ
-        </button>
-
+     <div style="font-size:50px">👥</div>
+     <h2>Arkadaşlarını Davet Et</h2>
+     <p class="symbol">Arkadaşlarını davet ederek referans sayını artır.</p>
+     <div class="item">
+      <b>Referansların</b>
+      <p id="friendCount">0 kişi</p>
+     </div>
+     <button type="button" class="action" onclick="copyReferral()">🔗 DAVET LİNKİNİ KOPYALA</button>
+     <button type="button" class="action dark" onclick="shareReferral()">📤 ARKADAŞLARLA PAYLAŞ</button>
     </div>
-
-</div>
-
-
-<!-- ===================================================== -->
-<!-- PROFILE -->
-<!-- ===================================================== -->
-
-<div id="profilePage" class="page">
-
-    <div class="pageTitle">
-        👤 Profile
-    </div>
-
-
+   </div>
+   <div id="profilePage" class="page">
+    <div class="pageTitle">👤 Profile</div>
     <div class="card profile">
-
-        <div class="avatar">
-            👤
-        </div>
-
-
-        <div
-        class="username"
-        id="username">
-            Telegram Kullanıcısı
-        </div>
-
-
-        <div class="item">
-
-            <b>
-                Telegram ID
-            </b>
-
-            <p id="userId">
-                Demo
-            </p>
-
-        </div>
-
-
-        <div class="item">
-
-            <b>
-                RA Bakiye
-            </b>
-
-            <p id="profileBalance">
-                0.0000 RA
-            </p>
-
-        </div>
-
-
-        <div class="item">
-
-            <b>
-                Toplam Elde Edilen
-            </b>
-
-            <p id="profileTotal">
-                0.0000 RA
-            </p>
-
-        </div>
-
-
-        <div class="item">
-
-            <b>
-                Mining Durumu
-            </b>
-
-            <p class="green">
-                🟢 Aktif
-            </p>
-
-        </div>
-
+     <div class="avatar">👤</div>
+     <div class="username" id="username">Telegram Kullanıcısı</div>
+     <div class="item">
+      <b>Telegram ID</b>
+      <p id="userId">Telegram üzerinden algılanıyor...</p>
+     </div>
+     <div class="item">
+      <b>RA Bakiye</b>
+      <p id="profileBalance">0.0000 RA · <span id="profileBalanceUsd">$0.000000</span></p>
+     </div>
+     <div class="item">
+      <b>Toplam Elde Edilen</b>
+      <p><span style="display:block">Toplanan Adet: <strong id="profileTotal">0.0000 RA</strong></span><span style="display:block;margin-top:6px">$ Karşılığı: <strong id="profileTotalUsd">$0.000000</strong></span></p>
+     </div>
+     <div class="item">
+      <b>Mining Durumu</b>
+      <p class="green">🟢 Aktif</p>
+     </div>
     </div>
-
-
-    <div class="notice">
-
-        Bu uygulamadaki RA Coin ve mining sistemi
-        sanal/demo oyun ekonomisidir.
-
-    </div>
-
-</div>
-
-</div>
-
-
-<!-- ===================================================== -->
-<!-- NAVIGATION -->
-<!-- ===================================================== -->
-
-<div class="nav">
-
-    <button
-    id="navMining"
-    class="active"
-    onclick="showPage('mining')">
-
-        <span>⛏️</span>
-        Mining
-
-    </button>
-
-
-    <button
-    id="navPackage"
-    onclick="showPage('package')">
-
-        <span>📦</span>
-        Paket
-
-    </button>
-
-
-    <button
-    id="navAssets"
-    onclick="showPage('assets')">
-
-        <span>💰</span>
-        Assets
-
-    </button>
-
-
-    <button
-    id="navTasks"
-    onclick="showPage('tasks')">
-
-        <span>🎁</span>
-        Tasks
-
-    </button>
-
-
-    <button
-    id="navFriends"
-    onclick="showPage('friends')">
-
-        <span>👥</span>
-        Friends
-
-    </button>
-
-
-    <button
-    id="navProfile"
-    onclick="showPage('profile')">
-
-        <span>👤</span>
-        Profile
-
-    </button>
-
-</div>
-
-
-<script>
-
-/* ===================================================== */
-/* TELEGRAM */
-/* ===================================================== */
-
-let tg = null;
-let telegramUser = null;
-
-if(
-    window.Telegram &&
-    Telegram.WebApp
-){
-
-    tg = Telegram.WebApp;
-
-    tg.ready();
-    tg.expand();
-
-    telegramUser =
-        tg.initDataUnsafe &&
-        tg.initDataUnsafe.user
-        ? tg.initDataUnsafe.user
-        : null;
-}
-
-
-/* ===================================================== */
-/* USER KEY */
-/* ===================================================== */
-
-let userKey = "demo";
-
-if(telegramUser && telegramUser.id){
-
-    userKey =
-        "user_" +
-        String(telegramUser.id);
-
-}
-
-
-/* ===================================================== */
-/* STORAGE */
-/* ===================================================== */
-
-const storageKey =
-    "ra_coin_data_" + userKey;
-
-
-/* ===================================================== */
-/* DEFAULT DATA */
-/* ===================================================== */
-
-let data = {
-
-    balance:0,
-
-    totalEarned:0,
-
-    referralCount:0,
-
-    packageName:"Başlangıç",
-
-    miningPerDay:150,
-
-    lastUpdate:Date.now()
-
+    <div class="notice">RA Coin Mining, aktif kaldıkça zaman içinde RA Coin biriktirmenizi sağlayan bir mining sistemidir. Görevler ve arkadaş davetleriyle kazancınızı artırabilirsiniz.</div>
+   </div>
+  </div>
+  <div class="nav">
+   <button type="button" id="navMining" class="active" onclick="showPage('mining')"><span>⛏️</span>Mining</button>
+   <button type="button" id="navPackage" onclick="showPage('package')"><span>📦</span>Paket</button>
+   <button type="button" id="navAssets" onclick="showPage('assets')"><span>💰</span>Assets</button>
+   <button type="button" id="navTasks" onclick="showPage('tasks')"><span>🎁</span>Tasks</button>
+   <button type="button" id="navFriends" onclick="showPage('friends')"><span>👥</span>Friends</button>
+   <button type="button" id="navProfile" onclick="showPage('profile')"><span>👤</span>Profile</button>
+  </div>
+  <script>
+(function(){
+'use strict';
+ 
+let tg=null, telegramUser=null;
+try{
+ if(window.Telegram && Telegram.WebApp){
+  tg=Telegram.WebApp; tg.ready(); tg.expand();
+  telegramUser=tg.initDataUnsafe && tg.initDataUnsafe.user ? tg.initDataUnsafe.user : null;
+ }
+}catch(e){console.log(e)}
+ 
+const userKey=telegramUser && telegramUser.id ? 'user_'+telegramUser.id : 'demo';
+const storageKey='ra_coin_data_v4_'+userKey;
+ 
+let data={
+ balance:0,
+ totalClaimed:0,
+ referralCount:0,
+ packageName:'Başlangıç',
+ miningPerDay:150,
+ lastUpdate:Date.now(),
+ lastDailyTask:0
 };
-
-
-/* ===================================================== */
-/* LOAD DATA */
-/* ===================================================== */
-
+ 
 function loadData(){
-
-    try{
-
-        const saved =
-            localStorage.getItem(storageKey);
-
-        if(saved){
-
-            const parsed =
-                JSON.parse(saved);
-
-            data = Object.assign(
-                data,
-                parsed
-            );
-
-        }
-
-    }catch(error){
-
-        console.log(error);
-
-    }
-
+ try{
+  const saved=localStorage.getItem(storageKey);
+  if(saved){
+   const parsed=JSON.parse(saved);
+   if(parsed && typeof parsed==='object') data=Object.assign(data,parsed);
+  }
+ }catch(e){console.log('load',e)}
 }
-
-
-/* ===================================================== */
-/* SAVE DATA */
-/* ===================================================== */
-
+ 
 function saveData(){
-
-    try{
-
-        data.lastUpdate =
-            Date.now();
-
-        localStorage.setItem(
-            storageKey,
-            JSON.stringify(data)
-        );
-
-    }catch(error){
-
-        console.log(error);
-
-    }
-
+ try{data.lastUpdate=Date.now();localStorage.setItem(storageKey,JSON.stringify(data));}
+ catch(e){console.log('save',e)}
 }
-
-
-/* ===================================================== */
-/* OFFLINE MINING */
-/* ===================================================== */
-
+ 
+function addMining(seconds){
+ if(!seconds || seconds<=0)return;
+ const rate=Number(data.miningPerDay)||150;
+ data.balance += rate/86400*seconds;
+}
+ 
 function calculateOfflineMining(){
-
-    const now = Date.now();
-
-    const last =
-        Number(data.lastUpdat
+ const now=Date.now();
+ const last=Number(data.lastUpdate)||now;
+ let seconds=(now-last)/1000;
+ if(seconds<0)seconds=0;
+ if(seconds>259200)seconds=259200;
+ addMining(seconds);
+ data.lastUpdate=now;
+ saveData();
+}
+ 
+function fmt(n){return (Number(n)||0).toFixed(4)}
+function usd(n){return '$'+((Number(n)||0)*0.002).toFixed(6)}
+ 
+window.showPage=function(page){
+ const pages=document.querySelectorAll('.page');
+ pages.forEach(function(el){el.classList.remove('active')});
+ const target=document.getElementById(page+'Page');
+ if(target)target.classList.add('active');
+ document.querySelectorAll('.nav button').forEach(function(el){el.classList.remove('active')});
+ const nav=document.getElementById('nav'+page.charAt(0).toUpperCase()+page.slice(1));
+ if(nav)nav.classList.add('active');
+ updateScreen();
+};
+ 
+function updateScreen(){
+ const b=fmt(data.balance), t=fmt(data.totalClaimed);
+ const ids={
+  balance:b,counter:b,totalEarned:t,assetBalance:b,assetCoin:b,assetTotalEarned:t,
+  profileBalance:b,profileTotal:t,activePackage:data.packageName,
+  refCount:(data.referralCount||0)+' kişi',friendCount:(data.referralCount||0)+' kişi'
+ };
+ Object.keys(ids).forEach(function(id){const el=document.getElementById(id);if(el)el.innerText=ids[id]});
+ const usdIds={
+  balanceUsd:usd(data.balance),
+  totalEarnedUsd:usd(data.totalClaimed),
+  assetBalanceUsd:usd(data.balance),
+  assetCoinUsd:usd(data.balance),
+  assetTotalEarnedUsd:usd(data.totalClaimed),
+  profileBalanceUsd:usd(data.balance),
+  profileTotalUsd:usd(data.totalClaimed)
+ };
+ Object.keys(usdIds).forEach(function(id){const el=document.getElementById(id);if(el)el.innerText=usdIds[id]});
+ const rate=(Number(data.miningPerDay)||150);
+ const speed=document.getElementById('speedText');
+ if(speed)speed.innerText=fmt(rate)+' RA / gün';
+ if(telegramUser){
+  const name=telegramUser.first_name || (telegramUser.username ? '@'+telegramUser.username : 'Telegram Kullanıcısı');
+  const u=document.getElementById('username');if(u)u.innerText=name;
+  const id=document.getElementById('userId');if(id)id.innerText=telegramUser.id;
+ }
+}
+ 
+window.claim=function(){
+ calculateOfflineMining();
+ if(data.balance<=0){alert('Claim edilecek RA bulunmuyor.');return}
+ const amount=data.balance;
+ data.totalClaimed += amount;
+ data.balance=0;
+ saveData();
+ updateScreen();
+ alert(fmt(amount)+' RA claim edildi.');
+};
+ 
+window.activatePackage=function(name,rate,price){
+ if(data.packageName===name){alert('Bu paket zaten aktif.');return}
+ const packageCost=Number(price)||0;
+ calculateOfflineMining();
+ if(packageCost>0 && data.balance<packageCost){
+  alert('Yetersiz RA bakiyesi. Bu paketi aktif etmek için '+fmt(packageCost)+' RA gerekiyor.');
+  return;
+ }
+ if(packageCost>0)data.balance-=packageCost;
+ data.packageName=name;
+ data.miningPerDay=Number(rate)||150;
+ data.lastUpdate=Date.now();
+ saveData();updateScreen();
+ alert(name+' paketi sanal olarak aktif edildi.');
+};
+ 
+window.withdraw=function(){
+ calculateOfflineMining();
+ if(data.balance<5000){alert('Minimum çekim miktarı 5.000 RA.');return}
+ alert('Çekim talebi demo modunda oluşturuldu.');
+};
+ 
+window.task=function(name,reward){
+ const now=Date.now();
+ if(name==='Günlük giriş'){
+  const today=new Date().toDateString();
+  if(data.lastDailyTask===today){alert('Bugünkü ödülü zaten aldın.');return}
+  data.lastDailyTask=today;
+ }
+ data.balance += Number(reward)||0;
+ saveData();updateScreen();
+ alert(name+' tamamlandı. +'+fmt(reward)+' RA');
+};
+ 
+function getBotUsername(){return 'raMiningBot'}
+function getReferralLink(){
+ const id=telegramUser && telegramUser.id ? telegramUser.id : 'demo';
+ return 'https://t.me/'+getBotUsername()+'?start=ref_'+id;
+}
+ 
+window.copyReferral=function(){
+ const link=getReferralLink();
+ if(navigator.clipboard && window.isSecureContext){
+  navigator.clipboard.writeText(link).then(function(){alert('Davet linki kopyalandı.\n\n'+link)}).catch(function(){alert(link)});
+ }else{alert(link)}
+};
+ 
+window.shareReferral=function(){
+ const link=getReferralLink();
+ const text='RA Coin\'e katıl! 🪙';
+ const share='https://t.me/share/url?url='+encodeURIComponent(link)+'&text='+encodeURIComponent(text);
+ if(tg && tg.openTelegramLink){tg.openTelegramLink(share)}else{window.open(share,'_blank')}
+};
+ 
+loadData();
+calculateOfflineMining();
+updateScreen();
+ 
+setInterval(function(){
+ addMining(1);
+ saveData();
+ updateScreen();
+},1000);
+ 
+window.addEventListener('beforeunload',saveData);
+document.addEventListener('visibilitychange',function(){if(!document.hidden){calculateOfflineMining();updateScreen()}});
+ 
+})();
+</script>
+ </body>
+</html>
