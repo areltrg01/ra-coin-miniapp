@@ -21,13 +21,14 @@ body{
     max-width:480px;
     margin:auto;
     min-height:100vh;
-    padding:20px 16px 90px;
+    padding:20px 16px 100px;
 }
 
 .header{
     display:flex;
     justify-content:space-between;
     align-items:center;
+    margin-bottom:18px;
 }
 
 .logo{
@@ -41,6 +42,9 @@ body{
     border-radius:20px;
     font-size:12px;
 }
+
+.page{display:none}
+.page.active{display:block}
 
 .card{
     background:#121620;
@@ -76,7 +80,7 @@ body{
     box-shadow:0 0 35px rgba(80,130,255,.12);
 }
 
-.mining .coin{
+.coin{
     font-size:42px;
 }
 
@@ -94,7 +98,6 @@ body{
     color:#080a0f;
     font-size:17px;
     font-weight:bold;
-    cursor:pointer;
 }
 
 .grid{
@@ -120,6 +123,40 @@ body{
     font-size:18px;
 }
 
+.title{
+    font-size:24px;
+    font-weight:bold;
+    margin-bottom:15px;
+}
+
+.item{
+    background:#171c27;
+    border-radius:16px;
+    padding:17px;
+    margin-top:12px;
+}
+
+.item b{
+    font-size:17px;
+}
+
+.item p{
+    color:#9aa2b3;
+    margin:7px 0 0;
+    font-size:14px;
+}
+
+.action{
+    width:100%;
+    border:0;
+    border-radius:12px;
+    padding:13px;
+    margin-top:12px;
+    font-weight:bold;
+    background:#fff;
+    color:#090b12;
+}
+
 .nav{
     position:fixed;
     bottom:0;
@@ -132,6 +169,7 @@ body{
     display:grid;
     grid-template-columns:repeat(5,1fr);
     padding:10px 5px;
+    z-index:10;
 }
 
 .nav button{
@@ -150,6 +188,30 @@ body{
     font-size:20px;
     margin-bottom:3px;
 }
+
+.profile{
+    text-align:center;
+    padding:15px;
+}
+
+.avatar{
+    font-size:55px;
+}
+
+.username{
+    font-size:21px;
+    font-weight:bold;
+    margin-top:8px;
+}
+
+.notice{
+    background:#171c27;
+    border-radius:14px;
+    padding:14px;
+    color:#aeb5c4;
+    font-size:13px;
+    margin-top:15px;
+}
 </style>
 </head>
 
@@ -157,141 +219,415 @@ body{
 
 <div class="app">
 
-    <div class="header">
-        <div class="logo">🪙 RA Coin</div>
-        <div class="status">● Mining</div>
-    </div>
+<div class="header">
+    <div class="logo">🪙 RA Coin</div>
+    <div class="status">● Mining</div>
+</div>
 
-    <div class="card center">
 
-        <div class="symbol">RA COIN BAKİYESİ</div>
+<!-- MINING -->
 
-        <div class="balance" id="balance">0.0000</div>
+<div id="miningPage" class="page active">
 
-        <div class="symbol">RA</div>
+<div class="card center">
 
-        <div class="mining">
-            <div class="coin">🪙</div>
-            <strong id="counter">0.0000</strong>
-            <div class="speed">Mining aktif</div>
-        </div>
+<div class="symbol">RA COIN BAKİYESİ</div>
 
-        <button class="claim" onclick="claim()">
-            CLAIM
-        </button>
+<div class="balance" id="balance">0.0000</div>
 
-    </div>
+<div class="symbol">RA</div>
 
-    <div class="grid">
+<div class="mining">
+    <div class="coin">🪙</div>
+    <strong id="counter">0.0000</strong>
+    <div class="speed">Mining aktif</div>
+</div>
 
-        <div class="box">
-            <small>Mining Hızı</small>
-            <strong id="speed">0 RA / saat</strong>
-        </div>
-
-        <div class="box">
-            <small>Toplam Kazılan</small>
-            <strong id="total">0.0000 RA</strong>
-        </div>
-
-        <div class="box">
-            <small>Aktif Paket</small>
-            <strong id="package">Yok</strong>
-        </div>
-
-        <div class="box">
-            <small>Referans</small>
-            <strong>0 kişi</strong>
-        </div>
-
-    </div>
+<button class="claim" onclick="claim()">
+    CLAIM
+</button>
 
 </div>
+
+<div class="grid">
+
+<div class="box">
+<small>Mining Hızı</small>
+<strong id="speedText">0.00625 RA/sn</strong>
+</div>
+
+<div class="box">
+<small>Toplam Kazılan</small>
+<strong id="total">0.0000 RA</strong>
+</div>
+
+<div class="box">
+<small>Aktif Paket</small>
+<strong>Başlangıç</strong>
+</div>
+
+<div class="box">
+<small>Referans</small>
+<strong id="refCount">0 kişi</strong>
+</div>
+
+</div>
+
+</div>
+
+
+<!-- ASSETS -->
+
+<div id="assetsPage" class="page">
+
+<div class="title">💰 Assets</div>
+
+<div class="card">
+
+<div class="symbol">TOPLAM BAKİYE</div>
+
+<div class="balance" id="assetBalance">0.0000</div>
+
+<div class="symbol">RA</div>
+
+<div class="item">
+<b>💎 RA Coin</b>
+<p>Mevcut bakiye: <span id="assetCoin">0.0000</span> RA</p>
+</div>
+
+<div class="item">
+<b>💵 Referans Değeri</b>
+<p>1 RA = $0.00200</p>
+</div>
+
+<div class="item">
+<b>📤 Çekim</b>
+<p>Minimum çekim: 5,000 RA</p>
+<button class="action" onclick="withdraw()">PARA ÇEK</button>
+</div>
+
+</div>
+
+</div>
+
+
+<!-- TASKS -->
+
+<div id="tasksPage" class="page">
+
+<div class="title">🎁 Tasks</div>
+
+<div class="item">
+<b>📱 Telegram'a katıl</b>
+<p>Görevi tamamla ve sanal RA ödülü kazan.</p>
+<button class="action" onclick="task('Telegram görevi')">
+    GÖREVI TAMAMLA
+</button>
+</div>
+
+<div class="item">
+<b>👥 Arkadaş davet et</b>
+<p>Arkadaşlarını davet ederek ekstra ödüller kazan.</p>
+<button class="action" onclick="showPage('friends')">
+    DAVET ET
+</button>
+</div>
+
+<div class="item">
+<b>🔥 Günlük giriş</b>
+<p>Her gün uygulamayı ziyaret et.</p>
+<button class="action" onclick="task('Günlük giriş')">
+    ÖDÜLÜ AL
+</button>
+</div>
+
+</div>
+
+
+<!-- FRIENDS -->
+
+<div id="friendsPage" class="page">
+
+<div class="title">👥 Friends</div>
+
+<div class="card center">
+
+<div style="font-size:45px">👥</div>
+
+<h2>Arkadaşlarını Davet Et</h2>
+
+<p class="symbol">
+Her davet edilen kullanıcı referans sistemine eklenir.
+</p>
+
+<div class="item">
+<b>Referansların</b>
+<p id="friendCount">0 kişi</p>
+</div>
+
+<button class="action" onclick="copyReferral()">
+    🔗 DAVET LİNKİNİ KOPYALA
+</button>
+
+</div>
+
+</div>
+
+
+<!-- PROFILE -->
+
+<div id="profilePage" class="page">
+
+<div class="title">👤 Profile</div>
+
+<div class="card profile">
+
+<div class="avatar">👤</div>
+
+<div class="username" id="username">
+Telegram Kullanıcısı
+</div>
+
+<div class="item">
+<b>Telegram ID</b>
+<p id="userId">Demo</p>
+</div>
+
+<div class="item">
+<b>RA Bakiye</b>
+<p id="profileBalance">0.0000 RA</p>
+</div>
+
+<div class="item">
+<b>Mining Durumu</b>
+<p>🟢 Aktif</p>
+</div>
+
+</div>
+
+<div class="notice">
+Bu uygulamadaki RA Coin ve mining sistemi sanal/demo oyun ekonomisidir.
+</div>
+
+</div>
+
+</div>
+
+
+<!-- NAVIGATION -->
 
 <div class="nav">
-    <button class="active">
-        <span>⛏️</span>
-        Mining
-    </button>
 
-    <button>
-        <span>💰</span>
-        Assets
-    </button>
+<button id="navMining" class="active" onclick="showPage('mining')">
+<span>⛏️</span>
+Mining
+</button>
 
-    <button>
-        <span>🎁</span>
-        Tasks
-    </button>
+<button id="navAssets" onclick="showPage('assets')">
+<span>💰</span>
+Assets
+</button>
 
-    <button>
-        <span>👥</span>
-        Friends
-    </button>
+<button id="navTasks" onclick="showPage('tasks')">
+<span>🎁</span>
+Tasks
+</button>
 
-    <button>
-        <span>👤</span>
-        Profile
-    </button>
+<button id="navFriends" onclick="showPage('friends')">
+<span>👥</span>
+Friends
+</button>
+
+<button id="navProfile" onclick="showPage('profile')">
+<span>👤</span>
+Profile
+</button>
+
 </div>
+
 
 <script>
 
 let balance = 0;
 let total = 0;
 
-/*
-  SANAL/DEMO MADENCİLİK EKONOMİSİ
-
-  Yatırımsız başlangıç hızı:
-  Günlük yaklaşık 0.30$ karşılığı sanal RA.
-
-  1 RA = 0.002$ referans değeri
-  0.30 / 0.002 = 150 RA / gün
-*/
 const miningPerSecond = 150 / 86400;
+
+
+/* SAYFA DEĞİŞTİR */
+
+function showPage(page){
+
+    document.querySelectorAll(".page").forEach(function(el){
+        el.classList.remove("active");
+    });
+
+    document.getElementById(page + "Page").classList.add("active");
+
+    document.querySelectorAll(".nav button").forEach(function(el){
+        el.classList.remove("active");
+    });
+
+    document.getElementById("nav" + 
+        page.charAt(0).toUpperCase() + page.slice(1)
+    ).classList.add("active");
+
+    updateScreen();
+}
+
+
+/* MINING */
 
 function mine(){
 
     balance += miningPerSecond;
     total += miningPerSecond;
 
-    document.getElementById("counter").innerText =
-        balance.toFixed(4);
+    updateScreen();
+}
+
+
+/* EKRANI GÜNCELLE */
+
+function updateScreen(){
 
     document.getElementById("balance").innerText =
+        balance.toFixed(4);
+
+    document.getElementById("counter").innerText =
         balance.toFixed(4);
 
     document.getElementById("total").innerText =
         total.toFixed(4) + " RA";
+
+    document.getElementById("assetBalance").innerText =
+        balance.toFixed(4);
+
+    document.getElementById("assetCoin").innerText =
+        balance.toFixed(4);
+
+    document.getElementById("profileBalance").innerText =
+        balance.toFixed(4) + " RA";
 }
+
+
+/* CLAIM */
 
 function claim(){
 
     if(balance <= 0){
+
         alert("Claim edilecek RA bulunmuyor.");
+
         return;
     }
 
-    alert(balance.toFixed(4) + " RA claim edildi.");
+    alert(
+        balance.toFixed(4) +
+        " RA claim edildi."
+    );
 
     balance = 0;
 
-    document.getElementById("counter").innerText =
-        "0.0000";
-
-    document.getElementById("balance").innerText =
-        "0.0000";
+    updateScreen();
 }
+
+
+/* PARA ÇEK */
+
+function withdraw(){
+
+    if(balance < 5000){
+
+        alert(
+            "Minimum çekim miktarı 5,000 RA."
+        );
+
+        return;
+    }
+
+    alert(
+        "Çekim talebi demo modunda oluşturuldu."
+    );
+}
+
+
+/* TASK */
+
+function task(name){
+
+    alert(
+        name +
+        " görevi demo olarak tamamlandı."
+    );
+}
+
+
+/* REFERANS */
+
+function copyReferral(){
+
+    const tg = window.Telegram &&
+               Telegram.WebApp;
+
+    let username = "raMiningBot";
+
+    if(tg && tg.initDataUnsafe &&
+       tg.initDataUnsafe.user){
+
+        username =
+            tg.initDataUnsafe.user.username ||
+            "raMiningBot";
+    }
+
+    const link =
+        "https://t.me/" +
+        username +
+        "?start=ref";
+
+    if(navigator.clipboard){
+
+        navigator.clipboard.writeText(link);
+
+        alert("Davet linki kopyalandı.");
+
+    }else{
+
+        alert(link);
+    }
+}
+
+
+/* TELEGRAM KULLANICI */
+
+if(window.Telegram && Telegram.WebApp){
+
+    Telegram.WebApp.ready();
+    Telegram.WebApp.expand();
+
+    const user =
+        Telegram.WebApp.initDataUnsafe.user;
+
+    if(user){
+
+        document.getElementById("username").innerText =
+            user.first_name ||
+            user.username ||
+            "Telegram Kullanıcısı";
+
+        document.getElementById("userId").innerText =
+            user.id;
+    }
+}
+
+
+/* MADENCİLİK */
 
 setInterval(mine,1000);
 
-if(window.Telegram && Telegram.WebApp){
-    Telegram.WebApp.ready();
-    Telegram.WebApp.expand();
-}
+updateScreen();
 
 </script>
 
 </body>
-          </html>
+</html>
