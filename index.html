@@ -446,15 +446,29 @@ pointer-events:none;z-index:0
 'use strict';
 
 let tg=null, telegramUser=null;
-try{
- if(window.Telegram && Telegram.WebApp){
-  tg=Telegram.WebApp; tg.ready(); tg.expand();
-  telegramUser=tg.initDataUnsafe && tg.initDataUnsafe.user ? tg.initDataUnsafe.user : null;
- }
-}catch(e){console.log(e)}
+let userKey='demo';
+let storageKey='ra_coin_data_v4_demo';
 
-const userKey=telegramUser && telegramUser.id ? 'user_'+telegramUser.id : 'demo';
-const storageKey='ra_coin_data_v4_'+userKey;
+function initTelegramIdentity(){
+ try{
+  if(window.Telegram && Telegram.WebApp){
+   tg=Telegram.WebApp;
+   tg.ready();
+   tg.expand();
+   telegramUser=tg.initDataUnsafe && tg.initDataUnsafe.user ? tg.initDataUnsafe.user : null;
+   if(telegramUser && telegramUser.id){
+    userKey='user_'+String(telegramUser.id);
+    storageKey='ra_coin_data_v4_'+userKey;
+    return true;
+   }
+  }
+ }catch(e){console.log('telegram identity',e)}
+ return false;
+}
+
+// Telegram WebView bazen kullanıcı bilgisini birkaç yüz ms geciktirebilir.
+// Kullanıcı ID'si gelmeden veri yüklemiyoruz; böylece kayıt yanlışlıkla 'demo' anahtarına yazılmaz.
+initTelegramIdentity();
 
 let data={
  balance:0,
@@ -819,19 +833,41 @@ window.adminBanToggle=function(){
   alert(window._adminTarget.banned?'Kullanıcı banlandı.':'Kullanıcının banı kaldırıldı.');
 };
 
-ensureAdminNav();
-
-loadData();
-calculateOfflineMining();
-updateScreen();
-renderWithdrawalHistory();
-ensureAdminNav();
-renderAdminPanel();
-
-setInterval(function(){
- addMining(1);
- saveData();
+function startApp(){
+ ensureAdminNav();
+ loadData();
+ calculateOfflineMining();
  updateScreen();
+ renderWithdrawalHistory();
+ ensureAdminNav();
+ renderAdminPanel();
+ updateTaskButton();
+}
+
+// Önce Telegram kimliğini birkaç kez dene. Kimlik gelirse kullanıcıya özel kayıt kullanılır.
+(function boot(){
+ let tries=0;
+ function attempt(){
+  tries++;
+  if(initTelegramIdentity() || tries>=10){
+   startApp();
+   return;
+  }
+  setTimeout(attempt,150);
+ }
+ attempt();
+})();
+
+let lastTick=Date.now();
+setInterval(function(){
+ const now=Date.now();
+ const seconds=Math.max(0,Math.min(10,(now-lastTick)/1000));
+ lastTick=now;
+ if(seconds>0){
+  addMining(seconds);
+  saveData();
+  updateScreen();
+ }
 },1000);
 
 window.addEventListener('beforeunload',saveData);
